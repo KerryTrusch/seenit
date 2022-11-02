@@ -6,7 +6,7 @@ import {
   faShare,
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { useState, useEffect } from "react";
 interface PostDetails {
   subreddit: string;
   user: string;
@@ -14,17 +14,23 @@ interface PostDetails {
   title: string;
   numComments: number;
   isFrontPage: boolean;
+  linksrc: string;
 }
-function TextPost({
+type IPreview = {
+  img: string;
+  description: string;
+};
+function ImagePost({
   subreddit,
   user,
   upvotes,
   title,
   numComments,
-  isFrontPage
+  isFrontPage,
+  linksrc,
 }: PostDetails) {
   return (
-    <div className="w-full h-full mb-3">
+    <div className="w-full h-full mb-2">
       <div className="rounded shadow flex cursor-pointer hover:outline hover:outline-1 hover:outline-slate-400">
         <div className="flex w-full">
           <div className="flex flex-col bg-[#f8f9fa] pt-2 h-full rounded-l px-1">
@@ -53,7 +59,31 @@ function TextPost({
                 ago
               </div>
             </div>
-            <div className="text-lg font-semibold mb-2">{title}</div>
+            <div className="flex">
+              <div className="flex flex-col">
+                <div className="text-lg font-semibold">{title}</div>
+                <a
+                  href={linksrc}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-blue-600 mb-3 max-w-[75%] text-ellipsis whitespace-nowrap overflow-hidden hover:underline"
+                >
+                  {linksrc}
+                </a>
+              </div>
+              <a
+                href={linksrc}
+                target="_blank"
+                rel="noreferrer"
+                className="bg-white p-2 ml-auto"
+              >
+                <img
+                  className="rounded h-[100px] w-[150px]"
+                  src={`/linkimagenotfound.png`}
+                  alt="link preview"
+                />
+              </a>
+            </div>
             <div className="flex text-gray-500">
               <div className="flex hover:bg-gray-200 rounded justify-center p-1.5">
                 <FontAwesomeIcon className="my-auto mr-1" icon={faMessage} />
@@ -75,4 +105,4 @@ function TextPost({
   );
 }
 
-export default TextPost;
+export default ImagePost;

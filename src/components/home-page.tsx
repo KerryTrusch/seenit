@@ -1,5 +1,6 @@
 import Sortbar from "./core/sortbar";
 import TextPost from "./core/text-post";
+import LinkPost from "./core/link-post"; 
 function HomePage() {
     return (
         <div className="min-h-screen w-full bg-[#dae0e6]">
@@ -10,6 +11,7 @@ function HomePage() {
                     </div>
                     <Sortbar />
                     <TextPost subreddit={"AskReddit"} user={"Test"} numComments={10000} upvotes={10000} title={"This is a test title"} isFrontPage={true}/>
+                    <LinkPost subreddit={"AskReddit"} user={"Test"} numComments={10000} upvotes={10000} title={"This is a test title"} isFrontPage={true} linksrc={"http://www.google.com"}/>
                 </div>
             </div>
         </div>
