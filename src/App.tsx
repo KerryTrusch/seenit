@@ -1,13 +1,18 @@
 import HomePage from "./components/home-page";
 import Navbar from "./components/navbar";
 import { useState, createContext, useEffect } from "react";
-
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 export const UserContext = createContext(null);
 function App() {
-    //App -> Navbar -> Login/Signup -> setUser on account creation or login
-  const [user, setUser] = useState(null);
+  //App -> Navbar -> Login/Signup -> setUser on account creation or login
+  const [user, setUser] = useState<any | null>(null);
   useEffect(() => {
-    console.log(user);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      }
+    })
   }, [user]);
   return (
     <UserContext.Provider value={user}>
