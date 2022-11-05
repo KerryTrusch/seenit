@@ -10,7 +10,13 @@ img {
   max-width: 100%;
 }
 
+.background-input {
+  background-color: #f6f7f8;
+}
 
+.seenit-orange {
+  background-color: #d93a00;
+}
 /*
 Background color: #dae0e6
 
