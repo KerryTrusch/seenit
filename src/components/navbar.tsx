@@ -5,6 +5,8 @@ import { useContext, useState } from "react";
 import Signup from "./core/signup";
 import Login from "./core/login";
 import { UserContext } from "../App";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 interface NavDetails {
   setUser: any;
 }
@@ -33,6 +35,10 @@ function Navbar({ setUser }: NavDetails) {
     } else {
       setUserDropdown(true);
     }
+  }
+  const signOutUser = () => {
+    signOut(auth);
+    window.location.reload();
   }
   if (user === null) {
     return (
@@ -90,7 +96,7 @@ function Navbar({ setUser }: NavDetails) {
           <div className="flex px-2 select-none">
             <img
               className="h-7 w-7 rounded mr-2 my-auto"
-              src={`./defaultPFP.png`}
+              src={`/defaultPFP.png`}
               alt="profile"
             />
             <div className="flex flex-col">
@@ -99,12 +105,19 @@ function Navbar({ setUser }: NavDetails) {
             </div>
             <FontAwesomeIcon className="my-auto ml-10" icon={faChevronDown} />
           </div>
-          <div className={`absolute ${userDropdown ? "visible" : "hidden"} top-12 w-full`}>
-            <div className="flex flex-col rounded bg-white">
-              <div className="pl-10 py-2 text-sm hover:bg-gray-400/[.4] rounded">
+          <div className={`absolute ${userDropdown ? "visible" : "hidden"} top-10 w-full rounded bg-white`}>
+            <div className="flex flex-col">
+              <div className="pl-10 py-2 text-sm hover:bg-gray-400/[.4]">
                 <Link to={`/profile`}>
                   Profile
                 </Link>
+              </div>
+            </div>
+            <div className="flex flex-col ">
+              <div className="pl-10 py-2 text-sm hover:bg-gray-400/[.4]">
+                <button onClick={signOutUser}>
+                  Log out
+                </button>
               </div>
             </div>
           </div>

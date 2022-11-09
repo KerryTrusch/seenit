@@ -6,7 +6,7 @@ import {
   faShare,
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 interface PostDetails {
   subreddit: string;
   user: string;
@@ -50,9 +50,9 @@ function ImagePost({
                 alt="Subseenit"
                 src={`/default.png`}
               />
-              <div className="text-black font-bold ml-1 hover:underline">
+              <Link to={`/r/${subreddit}`} className="text-black font-bold ml-1 hover:underline">
                 {`r/${subreddit}`}
-              </div>
+              </Link>
               <div className="text-gray-500  ml-2">
                 Posted by
                 <span className="hover:underline">{` u/${user} `}</span>7 hours

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { auth } from "../../firebase";
 interface SignupDetails {
   show: boolean;
