@@ -62,3 +62,13 @@ export async function getTotalUsersInCommunity(name) {
   const qSnap = await getDocs(q);
   return qSnap.size;
 }
+
+export async function getCommunityNames() {
+  const q = query(collection(db, "communities"));
+  const qSnap = await getDocs(q);
+  const ret = []
+  qSnap.forEach((doc) => {
+    ret.push(doc.data().communityName);
+  })
+  return ret;
+}
