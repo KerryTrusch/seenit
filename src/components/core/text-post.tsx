@@ -29,7 +29,7 @@ function TextPost({
         <div className="flex w-full">
           <div className="flex flex-col bg-[#f8f9fa] pt-2 h-full rounded-l px-1">
             <FontAwesomeIcon className="hover:text-red-300" icon={faArrowUp} />
-            <div className="font-bold text-xs py-1">{upvotes}</div>
+            <div className="font-bold text-xs py-1 mx-auto">{upvotes}</div>
             <FontAwesomeIcon
               className="hover:text-blue-300"
               icon={faArrowDown}
@@ -44,7 +44,9 @@ function TextPost({
                 alt="Subseenit"
                 src={`/default.png`}
               />
-              <Link to={`/r/${subreddit}`} className="text-black font-bold ml-1 hover:underline">
+              <Link to={`/r/${subreddit}`} className={`${
+                  isFrontPage ? "visible" : "hidden"
+                } text-black font-bold ml-1 hover:underline`}>
                 {`r/${subreddit}`}
               </Link>
               <div className="text-gray-500  ml-2">

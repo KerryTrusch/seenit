@@ -72,3 +72,39 @@ export async function getCommunityNames() {
   })
   return ret;
 }
+
+export async function createPost(title, community, link, image, body, postType, timestamp, username, hash) {
+  const data = {
+    postTitle: title,
+    communityName: community,
+    linksrc: link,
+    imagesrc: image,
+    postBody: body,
+    type: postType,
+    timestamp: timestamp,
+    author: username,
+    upvotes: 0,
+    hash: hash
+  }
+  setDoc(doc(db, "posts", hash), data);
+}
+
+export async function getPostsFromCommunity(community) {
+  const q = query(collection(db, "posts"), where("communityName", "==", community));
+  const qSnap = await getDocs(q);
+  const ret = []
+  qSnap.forEach((doc) => {
+    ret.push(doc.data());
+  })
+  return ret;
+}
+
+export async function getPostsForHomepage() {
+  const q = query(collection(db, "posts"));
+  const qSnap = await getDocs(q);
+  const ret = []
+  qSnap.forEach((doc) => {
+    ret.push(doc.data());
+  })
+  return ret;
+}

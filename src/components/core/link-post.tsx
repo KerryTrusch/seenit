@@ -16,10 +16,6 @@ interface PostDetails {
   isFrontPage: boolean;
   linksrc: string;
 }
-type IPreview = {
-  img: string;
-  description: string;
-};
 function ImagePost({
   subreddit,
   user,
@@ -50,7 +46,9 @@ function ImagePost({
                 alt="Subseenit"
                 src={`/default.png`}
               />
-              <Link to={`/r/${subreddit}`} className="text-black font-bold ml-1 hover:underline">
+              <Link to={`/r/${subreddit}`} className={`${
+                  isFrontPage ? "visible" : "hidden"
+                } text-black font-bold ml-1 hover:underline`}>
                 {`r/${subreddit}`}
               </Link>
               <div className="text-gray-500  ml-2">

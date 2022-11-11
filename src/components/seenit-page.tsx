@@ -2,13 +2,14 @@ import Sortbar from "./core/sortbar";
 import TextPost from "./core/text-post";
 import LinkPost from "./core/link-post"; 
 import CommunitySidebar from "./core/community-sidebar";
-import { getCommunityData, getTotalUsersInCommunity } from "../firebase";
+import { getCommunityData, getTotalUsersInCommunity, getPostsFromCommunity } from "../firebase";
 import {useState, useEffect, useContext} from 'react';
 import { UserContext } from "../App";
 import CreatePostBar from "./core/create-post-bar";
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);
+    const [posts, setPosts] = useState<object[]>([]);
     const user = useContext(UserContext);
     const url = window.location.href;
     const splitUrl = url.split("/r/");
@@ -18,6 +19,8 @@ function SeenitPage() {
             setPageData(data);
             const num = await getTotalUsersInCommunity(splitUrl[1]);
             setNumUsers(num);
+            const fetchedPosts = await getPostsFromCommunity(splitUrl[1]);
+            setPosts(fetchedPosts);
         }
         pullData();
     }, [])
@@ -48,23 +51,22 @@ function SeenitPage() {
               <div className="w-full lg:w-[640px] flex flex-col justify-center lg:mx-7">
                 <CreatePostBar />
                 <Sortbar />
-                <TextPost
-                  subreddit={"AskReddit"}
-                  user={"Test"}
-                  numComments={10000}
-                  upvotes={10000}
-                  title={"This is a test title"}
-                  isFrontPage={true}
-                />
-                <LinkPost
-                  subreddit={"AskReddit"}
-                  user={"Test"}
-                  numComments={10000}
-                  upvotes={10000}
-                  title={"This is a test title"}
-                  isFrontPage={true}
-                  linksrc={"http://www.google.com"}
-                />
+                {posts.map((post: any) => {
+                  if (post.type === "text") {
+                    return (
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash}/>
+                    )
+                  } else if (post.type === "link") {
+                    return (
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} />
+                    )
+                  } else {
+                    return (
+                       //Eventually turn this into an image post
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} />
+                    )
+                  }
+                })}
               </div>
               <div className="hidden lg:block flex flex-col">
                 <CommunitySidebar description={pageData.description} numUsers={numUsers}/>

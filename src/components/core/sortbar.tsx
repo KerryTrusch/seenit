@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire, faChartSimple, faArrowDownShortWide } from "@fortawesome/free-solid-svg-icons";
 function sortbar() {
   return (
-    <div className="w-full h-full mb-5">
+    <div className="w-full mb-5">
       <div className="flex p-2 bg-white rounded shadow">
         <div className="flex flex-col justify-center">
           <div className="flex px-2">

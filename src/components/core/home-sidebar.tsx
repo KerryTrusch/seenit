@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 interface SidebarDetails {
     openCommunityModal: any;
 }
@@ -21,7 +22,11 @@ function HomeSidebar({openCommunityModal}: SidebarDetails) {
               favorite communities.
             </span>
             <div className="border-b my-4" />
-            <button className="border-none bg-blue-600 text-white rounded-3xl py-1 w-full mb-2 font-bold">Create Post</button>
+            <Link to={`/submit`}>
+              <button className="border-none bg-blue-600 text-white rounded-3xl py-1 w-full mb-2 font-bold">
+                Create Post
+              </button>
+            </Link>
             <button className="bg-white text-blue-600 rounded-3xl py-1 w-full border border-blue-600 font-bold" onClick={openCommunityModal}>Create Community</button>
           </div>
         </div>
