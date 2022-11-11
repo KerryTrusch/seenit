@@ -22,6 +22,11 @@ function HomePage() {
     }
     initialize();
   }, [])
+  useEffect(() => {
+    globalPosts.forEach((post: any) => {
+      console.log(post.upvotes);
+    })
+  }, [globalPosts])
   return (
     <div className="min-h-screen w-full bg-[#dae0e6]">
       <div className="flex lg:p-3 h-full w-full">
@@ -30,20 +35,20 @@ function HomePage() {
             <div className="mb-2 text-sm text-black font-semibold">
               Popular posts
             </div>
-            <Sortbar />
+            <Sortbar posts={globalPosts} setPosts={setGlobalPosts} />
             {globalPosts.map((post: any) => {
                   if (post.type === "text") {
                     return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={true} key={post.hash}/>
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={true} key={post.hash} hash={post.hash}/>
                     )
                   } else if (post.type === "link") {
                     return (
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={true} linksrc={post.linksrc} key={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={true} linksrc={post.linksrc} key={post.hash} hash={post.hash}/>
                     )
                   } else {
                     return (
                        //Eventually turn this into an image post
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={true} linksrc={post.linksrc} key={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={true} linksrc={post.linksrc} key={post.hash} hash={post.hash}/>
                     )
                   }
                 })}

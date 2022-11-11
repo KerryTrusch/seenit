@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, setDoc, doc, getDoc, query, where } from "firebase/firestore";
+import { getFirestore, collection, getDocs, setDoc, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -107,4 +107,25 @@ export async function getPostsForHomepage() {
     ret.push(doc.data());
   })
   return ret;
+}
+
+export async function upvotePost(hash) {
+  console.log(hash);
+  const postRef = doc(db, "posts", hash);
+  const postSnap = await getDoc(postRef);
+  const upvotes = postSnap.data().upvotes;
+  updateDoc(postRef, {
+    upvotes: upvotes+1
+  });
+}
+
+export async function downvotePost(hash) {
+  console.log(hash);
+  const postRef = doc(db, "posts", hash);
+  const postSnap = await getDoc(postRef);
+  const upvotes = postSnap.data().upvotes;
+  console.log(upvotes);
+  updateDoc(postRef, {
+    upvotes: upvotes-1
+  });
 }

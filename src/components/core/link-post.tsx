@@ -7,6 +7,8 @@ import {
   faBookmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { upvotePost, downvotePost } from "../../firebase";
+import {useState} from 'react';
 interface PostDetails {
   subreddit: string;
   user: string;
@@ -15,6 +17,7 @@ interface PostDetails {
   numComments: number;
   isFrontPage: boolean;
   linksrc: string;
+  hash: string;
 }
 function ImagePost({
   subreddit,
@@ -24,17 +27,20 @@ function ImagePost({
   numComments,
   isFrontPage,
   linksrc,
+  hash
 }: PostDetails) {
+  const [upordown, setUpordown] = useState(0);
   return (
     <div className="w-full h-full mb-2">
       <div className="rounded shadow flex cursor-pointer hover:outline hover:outline-1 hover:outline-slate-400">
         <div className="flex w-full">
           <div className="flex flex-col bg-[#f8f9fa] pt-2 h-full rounded-l px-1">
-            <FontAwesomeIcon className="hover:text-red-300" icon={faArrowUp} />
+            <FontAwesomeIcon className={`${upordown === 1 ? "text-red-600" : ""} hover:text-red-300`} icon={faArrowUp} onClick={(e) => {upvotePost(hash); setUpordown(1)}}/>
             <div className="font-bold text-xs py-1">{upvotes}</div>
             <FontAwesomeIcon
-              className="hover:text-blue-300"
+              className={`${upordown === -1 ? "text-blue-600" : ""} hover:text-blue-300`}
               icon={faArrowDown}
+              onClick={(e) => {downvotePost(hash); setUpordown(-1)}}
             />
           </div>
           <div className="flex flex-col bg-white w-full p-2">

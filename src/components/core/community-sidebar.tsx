@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 interface SidebarDetails {
   description: string;
   numUsers: number;
@@ -20,9 +21,11 @@ function CommunitySidebar({description, numUsers}: SidebarDetails) {
               <span className="text-xs text-gray-500">Members</span>
             </div>
             <div className="border-b my-4" />
+            <Link to={`/submit`}>
             <button className="border-none bg-blue-600 text-white rounded-3xl py-1 w-full mb-2 font-bold">
               Create Post
             </button>
+            </Link>
           </div>
         </div>
       </div>

@@ -64,9 +64,11 @@ function Submit() {
     findNames();
   }, []);
 
-  const handleCreatePost = () => {
+  const handleCreatePost = (e: any) => {
+    e.preventDefault();
     const timestamp = Date.now();
     const hash = timestamp.toString(36);
+    console.log(hash);
     switch (postType) {
       case 1:
         createPost(
@@ -154,7 +156,7 @@ function Submit() {
               </div>
             </div>
           </div>
-          <form onSubmit={handleCreatePost}>
+          <form onSubmit={(e) => {handleCreatePost(e)}}>
             <div className="flex flex-col rounded bg-white">
               <div className="flex select-none">
                 <div

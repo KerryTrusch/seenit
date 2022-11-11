@@ -13,13 +13,14 @@ function SeenitPage() {
     const user = useContext(UserContext);
     const url = window.location.href;
     const splitUrl = url.split("/r/");
+    const name = splitUrl[1].indexOf("/") > 0 ? splitUrl[1].slice(0, -1) : splitUrl[1];
     useEffect(() => {
         async function pullData() {
-            const data = await getCommunityData(splitUrl[1]);
+            const data = await getCommunityData(name);
             setPageData(data);
-            const num = await getTotalUsersInCommunity(splitUrl[1]);
+            const num = await getTotalUsersInCommunity(name);
             setNumUsers(num);
-            const fetchedPosts = await getPostsFromCommunity(splitUrl[1]);
+            const fetchedPosts = await getPostsFromCommunity(name);
             setPosts(fetchedPosts);
         }
         pullData();
@@ -39,10 +40,10 @@ function SeenitPage() {
               <img className="rounded-full outline outline-white mt-[-10px] h-16" src={`/default.png`} alt="logo" />
               <div className="flex flex-col ml-4">
                 <div className="flex">
-                  <h2 className="font-bold text-3xl p-1 mr-7">{splitUrl[1]}</h2>
+                  <h2 className="font-bold text-3xl p-1 mr-7">{name}</h2>
                   <button className={`${user === null ? "hidden" : "visible"} border border-blue-600 text-blue-600 rounded-2xl px-6 my-2 font-bold`}>Join</button>
                 </div>
-                <span className="text-sm text-gray-400 font-semibold p-1">r/{splitUrl[1]}</span>
+                <span className="text-sm text-gray-400 font-semibold p-1">r/{name}</span>
               </div>
             </div>
           </div>
@@ -50,20 +51,20 @@ function SeenitPage() {
             <div className="flex lg:w-auto lg:mx-auto w-full">
               <div className="w-full lg:w-[640px] flex flex-col justify-center lg:mx-7">
                 <CreatePostBar />
-                <Sortbar />
+                <Sortbar posts={posts} setPosts={setPosts} />
                 {posts.map((post: any) => {
                   if (post.type === "text") {
                     return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash}/>
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash} hash={post.hash}/>
                     )
                   } else if (post.type === "link") {
                     return (
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} />
                     )
                   } else {
                     return (
                        //Eventually turn this into an image post
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={0} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} />
                     )
                   }
                 })}
