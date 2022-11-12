@@ -40,12 +40,13 @@ function Comment({
     }
     grabReplies();
   }, []);
-  const postReply = () => {
+  const postReply = async () => {
     if (user !== null) {
       const timestamp = Date.now();
       const hash = timestamp.toString(36);
-      createComment(user.email, thoughts, timestamp, commentID, postID, hash);
+      await createComment(user.email, thoughts, timestamp, commentID, postID, hash);
       setHideReply(true);
+      window.location.reload();
     }
   };
   return (

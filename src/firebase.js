@@ -134,7 +134,7 @@ export async function downvotePost(hash) {
   });
 }
 
-export function createComment(user, body, timestamp, parentID, postHash, commentHash) {
+export async function createComment(user, body, timestamp, parentID, postHash, commentHash) {
   const data = {
     user: user,
     body: body,
@@ -144,7 +144,7 @@ export function createComment(user, body, timestamp, parentID, postHash, comment
     commentID: commentHash,
     upvotes: 0
   }
-  setDoc(doc(db, "comments", commentHash), data);
+  await setDoc(doc(db, "comments", commentHash), data);
   _incrementNumComments(postHash);
 }
 

@@ -35,11 +35,12 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
     }
     grabComments();
   }, []);
-  const postRootComment = () => {
+  const postRootComment = async () => {
     if (user !== null) {
       const timestamp = Date.now();
       const hash = timestamp.toString(36);
-      createComment(user.email, thoughts, timestamp, null, post.hash, hash);
+      await createComment(user.email, thoughts, timestamp, null, post.hash, hash);
+      window.location.reload();
     }
   };
   function renderSwitch() {
