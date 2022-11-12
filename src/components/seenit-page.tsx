@@ -65,7 +65,7 @@ function SeenitPage() {
                 {posts.map((post: any) => {
                   if (post.type === "text") {
                     return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true} body={post.postBody}/>
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true} body={post.postBody} timestamp={post.timestamp}/>
                     )
                   } else if (post.type === "link") {
                     return (

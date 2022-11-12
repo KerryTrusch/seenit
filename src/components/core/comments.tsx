@@ -58,6 +58,7 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
             hash={post.hash}
             isEmbeded={true}
             body={post.postBody}
+            timestamp={post.timestamp}
           />
         );
       case "link":

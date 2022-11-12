@@ -9,6 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { upvotePost, downvotePost } from "../../firebase";
 import { useState } from "react";
+import moment from "moment";
 interface PostDetails {
   subreddit: string;
   user: string;
@@ -19,6 +20,7 @@ interface PostDetails {
   hash: string;
   isEmbeded: boolean;
   body: string;
+  timestamp: number;
 }
 function TextPost({
   subreddit,
@@ -29,9 +31,11 @@ function TextPost({
   isFrontPage,
   hash,
   isEmbeded,
-  body
+  body,
+  timestamp
 }: PostDetails) {
   const [upordown, setUpordown] = useState(0);
+  const day = moment(timestamp);
   return (
     <div className="w-full mb-3">
       <div className={`${isEmbeded ? "rounded-t" : "rounded shadow hover:outline hover:outline-1 hover:outline-slate-400"} flex cursor-pointer`}>
@@ -78,8 +82,7 @@ function TextPost({
               </Link>
               <div className="text-gray-500">
                 Posted by
-                <span className="hover:underline">{` u/${user} `}</span>7 hours
-                ago
+                <span className="hover:underline mr-2">{` u/${user} `}</span>{day.fromNow()}
               </div>
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
