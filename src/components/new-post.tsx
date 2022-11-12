@@ -184,9 +184,9 @@ function Submit() {
                     postType === 2
                       ? "text-blue-600 border-b-blue-600"
                       : "text-gray-500"
-                  } flex basis-1/3 py-2 border-b border-r hover:cursor-pointer hover:bg-blue-100`}
+                  } flex basis-1/3 py-2 border-b border-r hover:cursor-pointer hover:bg-blue-100 hover:cursor-not-allowed`}
                   onClick={(e) => {
-                    setPostType(2);
+                    //setPostType(2);
                   }}
                 >
                   <div className="mx-auto font-semibold">
@@ -199,9 +199,9 @@ function Submit() {
                     postType === 3
                       ? "text-blue-600 border-b-blue-600"
                       : "text-gray-500"
-                  } flex basis-1/3 py-2 border-b border-r hover:cursor-pointer hover:bg-blue-100`}
+                  } flex basis-1/3 py-2 border-b border-r hover:cursor-pointer hover:bg-blue-100 hover:cursor-not-allowed`}
                   onClick={(e) => {
-                    setPostType(3);
+                    //setPostType(3);
                   }}
                 >
                   <div className="mx-auto font-semibold">
