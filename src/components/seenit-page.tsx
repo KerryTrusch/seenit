@@ -6,14 +6,17 @@ import { getCommunityData, getTotalUsersInCommunity, getPostsFromCommunity } fro
 import {useState, useEffect, useContext} from 'react';
 import { UserContext } from "../App";
 import CreatePostBar from "./core/create-post-bar";
+import { Routes, Route } from "react-router-dom";
+import Comments from './core/comments';
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);
     const [posts, setPosts] = useState<object[]>([]);
+    const [showPost, setShowPost] = useState(false);
     const user = useContext(UserContext);
     const url = window.location.href;
     const splitUrl = url.split("/r/");
-    const name = splitUrl[1].indexOf("/") > 0 ? splitUrl[1].slice(0, -1) : splitUrl[1];
+    const name = splitUrl[1].split("/")[0];
     useEffect(() => {
         async function pullData() {
             const data = await getCommunityData(name);
@@ -31,6 +34,13 @@ function SeenitPage() {
                 404
             </div>
         )
+    }
+    const hidePost= () => {
+      setShowPost(false);
+      window.location.href = '../';
+    }
+    const showPostOnClick = () => {
+      setShowPost(true);
     }
     return (
         <div className="min-h-screen w-full bg-[#dae0e6]">
@@ -55,16 +65,16 @@ function SeenitPage() {
                 {posts.map((post: any) => {
                   if (post.type === "text") {
                     return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash} hash={post.hash}/>
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true}/>
                     )
                   } else if (post.type === "link") {
                     return (
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
                     )
                   } else {
                     return (
                        //Eventually turn this into an image post
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
                     )
                   }
                 })}
@@ -74,6 +84,9 @@ function SeenitPage() {
               </div>
             </div>
           </div>
+          <Routes>
+            <Route path="comments/:id" element={<Comments show={showPost} hideModal={hidePost} display={showPostOnClick} numUsers={numUsers}/>} />
+          </Routes>
         </div>
       );
 }

@@ -17,6 +17,7 @@ interface PostDetails {
   numComments: number;
   isFrontPage: boolean;
   hash: string;
+  isEmbeded: boolean;
 }
 function TextPost({
   subreddit,
@@ -26,13 +27,14 @@ function TextPost({
   numComments,
   isFrontPage,
   hash,
+  isEmbeded
 }: PostDetails) {
   const [upordown, setUpordown] = useState(0);
   return (
-    <div className="w-full h-full mb-3">
-      <div className="rounded shadow flex cursor-pointer hover:outline hover:outline-1 hover:outline-slate-400">
+    <div className="w-full mb-3">
+      <div className={`${isEmbeded ? "rounded-t" : "rounded shadow hover:outline hover:outline-1 hover:outline-slate-400"} flex cursor-pointer`}>
         <div className="flex w-full">
-          <div className="flex flex-col bg-[#f8f9fa] pt-2 h-full rounded-l px-1">
+          <div className={`${isEmbeded ? "bg-white" : "bg-[#f8f9fa]"} flex flex-col pt-2 h-full rounded-l px-1`}>
             <FontAwesomeIcon
               className={`${
                 upordown === 1 ? "text-red-600" : ""
@@ -80,10 +82,18 @@ function TextPost({
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
             <div className="flex text-gray-500">
-              <div className="flex hover:bg-gray-200 rounded justify-center p-1.5">
-                <FontAwesomeIcon className="my-auto mr-1" icon={faMessage} />
-                <div className="text-xs">{numComments} Comments</div>
-              </div>
+              <Link
+                to={`${
+                  isFrontPage
+                    ? "r/" + subreddit + "/comments/" + hash
+                    : "comments/" + hash
+                }`}
+              >
+                <div className="flex hover:bg-gray-200 rounded justify-center p-1.5">
+                  <FontAwesomeIcon className="my-auto mr-1" icon={faMessage} />
+                  <div className="text-xs">{numComments} Comments</div>
+                </div>
+              </Link>
               <div className="flex hover:bg-gray-200 rounded justify-center p-1.5">
                 <FontAwesomeIcon className="my-auto mr-1" icon={faShare} />
                 <div className="text-xs">Share</div>

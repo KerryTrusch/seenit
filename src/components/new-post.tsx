@@ -240,6 +240,10 @@ function Submit() {
                       : "bg-gray-600"
                   } mb-2 ml-auto rounded-2xl py-1 px-4 text-white font-semibold`}
                   type="submit"
+                  disabled={community === null ||
+                    title === null ||
+                    (postType === 2 && imagesrc === null) ||
+                    (postType === 3 && link === null)}
                 >
                   Post
                 </button>

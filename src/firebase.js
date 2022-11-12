@@ -109,6 +109,12 @@ export async function getPostsForHomepage() {
   return ret;
 }
 
+export async function getSinglePost(hash) {
+  const docRef = doc(db, "posts", hash);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
+}
+
 export async function upvotePost(hash) {
   console.log(hash);
   const postRef = doc(db, "posts", hash);
@@ -120,7 +126,6 @@ export async function upvotePost(hash) {
 }
 
 export async function downvotePost(hash) {
-  console.log(hash);
   const postRef = doc(db, "posts", hash);
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
@@ -128,4 +133,55 @@ export async function downvotePost(hash) {
   updateDoc(postRef, {
     upvotes: upvotes-1
   });
+}
+
+export function createComment(user, body, timestamp, parentID, postHash, commentHash) {
+  const data = {
+    user: user,
+    body: body,
+    timestamp: timestamp,
+    parentID: parentID,
+    postHash: postHash,
+    commentID: commentHash,
+    upvotes: 0
+  }
+  setDoc(doc(db, "comments", postHash), data);
+}
+
+export async function loadCommentsFromPost(hash) {
+  const q = query(collection(db, "comments"), where("postHash", "==", hash));
+  const qSnap = await getDocs(q);
+  const ret = []
+  qSnap.forEach((doc) => {
+    ret.push(doc.data());
+  })
+  return ret;
+}
+
+export async function upvoteComment(commentHash) {
+  const postRef = doc(db, "comments", commentHash);
+  const postSnap = await getDoc(postRef);
+  const upvotes = postSnap.data().upvotes;
+  updateDoc(postRef, {
+    upvotes: upvotes+1
+  });
+}
+
+export async function downvoteComment(commentHash) {
+  const postRef = doc(db, "comments", commentHash);
+  const postSnap = await getDoc(postRef);
+  const upvotes = postSnap.data().upvotes;
+  updateDoc(postRef, {
+    upvotes: upvotes-1
+  });
+}
+
+export async function getRepliedComments(parentID) {
+  const q = query(collection(db, "comments"), where("parentID", "==", parentID));
+  const qSnap = await getDocs(q);
+  const ret = []
+  qSnap.forEach((doc) => {
+    ret.push(doc.data());
+  })
+  return ret;
 }

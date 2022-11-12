@@ -18,6 +18,7 @@ interface PostDetails {
   isFrontPage: boolean;
   linksrc: string;
   hash: string;
+  isEmbeded: boolean;
 }
 function ImagePost({
   subreddit,
@@ -27,12 +28,13 @@ function ImagePost({
   numComments,
   isFrontPage,
   linksrc,
-  hash
+  hash,
+  isEmbeded
 }: PostDetails) {
   const [upordown, setUpordown] = useState(0);
   return (
     <div className="w-full h-full mb-2">
-      <div className="rounded shadow flex cursor-pointer hover:outline hover:outline-1 hover:outline-slate-400">
+      <div className={`${isEmbeded ? "rounded-t" : "rounded shadow"} flex cursor-pointer hover:outline hover:outline-1 hover:outline-slate-400`}>
         <div className="flex w-full">
           <div className="flex flex-col bg-[#f8f9fa] pt-2 h-full rounded-l px-1">
             <FontAwesomeIcon className={`${upordown === 1 ? "text-red-600" : ""} hover:text-red-300`} icon={faArrowUp} onClick={(e) => {upvotePost(hash); setUpordown(1)}}/>
