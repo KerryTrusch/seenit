@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../App";
 import { createPost } from "../firebase";
+import { useNavigate } from "react-router-dom";
 function Submit() {
   const user = useContext<any>(UserContext);
   //input value
@@ -26,8 +27,9 @@ function Submit() {
   const [imagesrc, setImagesrc] = useState(null);
   const [postType, setPostType] = useState(1);
   const [titleCharacters, setTitleCharacter] = useState(0);
+  const navigate = useNavigate();
   function filterFunction() {
-    let input, filter, ul, li, a, i, div;
+    let input, filter, a, i, div;
     input = document.getElementById("SubmitDropdown");
     filter = value.toUpperCase();
     div = document.getElementById("myDropdown");
@@ -68,7 +70,6 @@ function Submit() {
     e.preventDefault();
     const timestamp = Date.now();
     const hash = timestamp.toString(36);
-    console.log(hash);
     switch (postType) {
       case 1:
         createPost(
@@ -112,6 +113,7 @@ function Submit() {
       default:
         throw new Error("Post type is not valid.");
     }
+    navigate("/r/"+community+"/comments/"+hash);
   };
   return (
     <div className="min-h-screen w-full bg-[#dae0e6]">

@@ -6,7 +6,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Routes, Route } from "react-router-dom";
 import SeenitPage from "./components/seenit-page";
 import Submit from "./components/new-post";
-import Comments from "./components/core/comments";
 export const UserContext = createContext(null);
 function App() {
   //App -> Navbar -> Login/Signup -> setUser on account creation or login

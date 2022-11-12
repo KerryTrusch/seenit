@@ -84,7 +84,8 @@ export async function createPost(title, community, link, image, body, postType, 
     timestamp: timestamp,
     author: username,
     upvotes: 0,
-    hash: hash
+    hash: hash,
+    numComments: 0
   }
   setDoc(doc(db, "posts", hash), data);
 }
@@ -116,7 +117,6 @@ export async function getSinglePost(hash) {
 }
 
 export async function upvotePost(hash) {
-  console.log(hash);
   const postRef = doc(db, "posts", hash);
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
@@ -129,7 +129,6 @@ export async function downvotePost(hash) {
   const postRef = doc(db, "posts", hash);
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
-  console.log(upvotes);
   updateDoc(postRef, {
     upvotes: upvotes-1
   });
@@ -145,11 +144,12 @@ export function createComment(user, body, timestamp, parentID, postHash, comment
     commentID: commentHash,
     upvotes: 0
   }
-  setDoc(doc(db, "comments", postHash), data);
+  setDoc(doc(db, "comments", commentHash), data);
+  _incrementNumComments(postHash);
 }
 
 export async function loadCommentsFromPost(hash) {
-  const q = query(collection(db, "comments"), where("postHash", "==", hash));
+  const q = query(collection(db, "comments"), where("postHash", "==", hash), where("parentID", "==", null));
   const qSnap = await getDocs(q);
   const ret = []
   qSnap.forEach((doc) => {
@@ -184,4 +184,13 @@ export async function getRepliedComments(parentID) {
     ret.push(doc.data());
   })
   return ret;
+}
+
+async function _incrementNumComments(hash) {
+  const postRef = doc(db, "posts", hash);
+  const postSnap = await getDoc(postRef);
+  const coms = postSnap.data().numComments;
+  updateDoc(postRef, {
+    numComments: coms+1
+  });
 }

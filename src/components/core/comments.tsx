@@ -17,12 +17,7 @@ interface CommentsDetails {
   display: any;
   numUsers: number;
 }
-function Comments({
-  show,
-  hideModal,
-  display,
-  numUsers,
-}: CommentsDetails) {
+function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
   const [rootComments, setRootComments] = useState<object[]>([]);
   const user = useContext<any>(UserContext);
   const [post, setPost] = useState<any>({});
@@ -42,11 +37,11 @@ function Comments({
   }, []);
   const postRootComment = () => {
     if (user !== null) {
-        const timestamp = Date.now();
-        const hash = timestamp.toString(36);
-        createComment(user.email, thoughts, timestamp, null, post.hash, hash);
+      const timestamp = Date.now();
+      const hash = timestamp.toString(36);
+      createComment(user.email, thoughts, timestamp, null, post.hash, hash);
     }
-  }
+  };
   function renderSwitch() {
     switch (post.type) {
       case "text":
@@ -61,6 +56,7 @@ function Comments({
             key={post.hash}
             hash={post.hash}
             isEmbeded={true}
+            body={post.postBody}
           />
         );
       case "link":
@@ -103,7 +99,7 @@ function Comments({
       onClick={hideModal}
     >
       <div
-        className="flex flex-col fixed top-[50%] left-[50%] lg:min-w-[1280px] bg-[#dae0e6] rounded h-auto translate-x-[-50%] translate-y-[-50%] md:min-w-[600px]"
+        className="flex flex-col fixed top-[45px] left-[50%] lg:min-w-[1280px] bg-[#dae0e6] rounded h-auto translate-x-[-50%]  md:min-w-[600px]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-black h-10">
@@ -151,14 +147,17 @@ function Comments({
                 </div>
                 {rootComments.map((comment: any) => {
                   return (
-                    <Comment
-                      username={comment.user}
-                      timestamp={comment.timestamp}
-                      body={comment.body}
-                      upvotes={comment.upvotes}
-                      parentID={comment.parentID}
-                      commentID={comment.commentID}
-                    />
+                    <div key={comment.commentID}>
+                      <Comment
+                        username={comment.user}
+                        timestamp={comment.timestamp}
+                        body={comment.body}
+                        upvotes={comment.upvotes}
+                        parentID={comment.parentID}
+                        commentID={comment.commentID}
+                        postID={post.hash}
+                      />
+                    </div>
                   );
                 })}
               </div>

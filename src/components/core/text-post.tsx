@@ -18,6 +18,7 @@ interface PostDetails {
   isFrontPage: boolean;
   hash: string;
   isEmbeded: boolean;
+  body: string;
 }
 function TextPost({
   subreddit,
@@ -27,7 +28,8 @@ function TextPost({
   numComments,
   isFrontPage,
   hash,
-  isEmbeded
+  isEmbeded,
+  body
 }: PostDetails) {
   const [upordown, setUpordown] = useState(0);
   return (
@@ -70,17 +72,18 @@ function TextPost({
                 to={`/r/${subreddit}`}
                 className={`${
                   isFrontPage ? "visible" : "hidden"
-                } text-black font-bold ml-1 hover:underline`}
+                } text-black font-bold ml-1 mr-2 hover:underline`}
               >
                 {`r/${subreddit}`}
               </Link>
-              <div className="text-gray-500  ml-2">
+              <div className="text-gray-500">
                 Posted by
                 <span className="hover:underline">{` u/${user} `}</span>7 hours
                 ago
               </div>
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
+            <div className={`${isEmbeded ? "visible" : "hidden"} text-md text-black mb-2`}>{body}</div>
             <div className="flex text-gray-500">
               <Link
                 to={`${

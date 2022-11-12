@@ -65,16 +65,16 @@ function SeenitPage() {
                 {posts.map((post: any) => {
                   if (post.type === "text") {
                     return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true}/>
+                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true} body={post.postBody}/>
                     )
                   } else if (post.type === "link") {
                     return (
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
                     )
                   } else {
                     return (
                        //Eventually turn this into an image post
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={0} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
+                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
                     )
                   }
                 })}
