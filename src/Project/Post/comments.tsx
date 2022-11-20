@@ -4,11 +4,11 @@ import {
   createComment,
   getSinglePost,
 } from "../../firebase";
-import TextPost from "./text-post";
-import LinkPost from "./link-post";
+import TextPost from "../PostTypes/text-post";
+import LinkPost from "../PostTypes/link-post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import CommunitySidebar from "./community-sidebar";
+import CommunitySidebar from "../Sidebar/community-sidebar";
 import Comment from "./comment";
 import { UserContext } from "../../App";
 interface CommentsDetails {

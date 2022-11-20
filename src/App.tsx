@@ -1,11 +1,11 @@
-import HomePage from "./components/home-page";
-import Navbar from "./components/navbar";
+import HomePage from "./Project/home-page";
+import Navbar from "./Project/navbar";
 import { useState, createContext, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { Routes, Route } from "react-router-dom";
-import SeenitPage from "./components/seenit-page";
-import Submit from "./components/new-post";
+import SeenitPage from "./Project/seenit-page";
+import Submit from "./Project/new-post";
 export const UserContext = createContext(null);
 function App() {
   //App -> Navbar -> Login/Signup -> setUser on account creation or login

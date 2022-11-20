@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage, faLink } from "@fortawesome/free-solid-svg-icons";
-function CreatePostBar() {
+const CreatePostBar = () => {
   return (
     <div className="shadow bg-white rounded mb-5">
       <div className="py-0.5 flex">

@@ -1,8 +1,8 @@
-import Sortbar from "./core/sortbar";
-import TextPost from "./core/text-post";
-import LinkPost from "./core/link-post";
-import HomeSidebar from "./core/home-sidebar";
-import CommunityModal from "./core/community-modal";
+import Sortbar from "./Sidebar/sortbar";
+import TextPost from "./PostTypes/text-post";
+import LinkPost from "./PostTypes/link-post";
+import HomeSidebar from "./Sidebar/home-sidebar";
+import CommunityModal from "./CreateCommunity/community-modal";
 import { useState, useEffect } from "react";
 import { getPostsForHomepage } from "../firebase";
 //7 margin for between elements

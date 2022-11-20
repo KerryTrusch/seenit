@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire, faChartSimple, faArrowDownShortWide } from "@fortawesome/free-solid-svg-icons";
 import {useState} from 'react';
+import Button from "../../Shared/components/Button";
+import Icon from "../../Shared/components/Icon";
 interface SortDetails {
   posts: object[];
   setPosts: any;
@@ -34,24 +36,27 @@ function Sortbar({posts, setPosts}: SortDetails) {
       <div className="flex p-2 bg-white rounded shadow">
         <div className="flex flex-col justify-center">
           <div className="flex px-2">
-            <div className={`${selected === 1 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={(e) => {setSelected(1); sortHot();}}>
+            <div className={`${selected === 1 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={() => {setSelected(1); sortHot();}}>
               <FontAwesomeIcon className="my-auto" icon={faFire} />
               <span className="text-gray-500 text-sm font-bold ml-1.5 my-auto">
                 Hot
               </span>
             </div>
-            <div className={`${selected === 2 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={(e) => {setSelected(2); sortNew();}}>
+            <div className={`${selected === 2 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={() => {setSelected(2); sortNew();}}>
               <FontAwesomeIcon className="my-auto" icon={faArrowDownShortWide} />
               <span className="text-gray-500 text-sm font-bold ml-1.5 my-auto">
                 New
               </span>
             </div>
-            <div className={`${selected === 3 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={(e) => {setSelected(3); sortTop();}}>
-              <FontAwesomeIcon className="my-auto" icon={faChartSimple} />
+            <div className={`${selected === 3 ? "bg-gray-300" : ""} flex mr-2 rounded-2xl hover:bg-gray-200 py-2 px-2.5 cursor-pointer`} onClick={() => {setSelected(3); sortTop();}}>
+              <Icon icon={faChartSimple} className="my-auto" />
               <span className="text-gray-500 text-sm font-bold ml-1.5 my-auto">
                 Top
               </span>
             </div>
+            <Button onClick={() => {setSelected(3); sortTop();}} className="hover:bg-gray-200">
+              Test
+            </Button>
           </div>
         </div>
       </div>

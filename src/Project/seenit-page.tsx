@@ -1,13 +1,13 @@
-import Sortbar from "./core/sortbar";
-import TextPost from "./core/text-post";
-import LinkPost from "./core/link-post"; 
-import CommunitySidebar from "./core/community-sidebar";
+import Sortbar from "./Sidebar/sortbar";
+import TextPost from "./PostTypes/text-post";
+import LinkPost from "./PostTypes/link-post"; 
+import CommunitySidebar from "./Sidebar/community-sidebar";
 import { getCommunityData, getTotalUsersInCommunity, getPostsFromCommunity } from "../firebase";
 import {useState, useEffect, useContext} from 'react';
 import { UserContext } from "../App";
-import CreatePostBar from "./core/create-post-bar";
+import CreatePostBar from "./CreateCommunity/create-post-bar";
 import { Routes, Route } from "react-router-dom";
-import Comments from './core/comments';
+import Comments from './Post/comments';
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);
