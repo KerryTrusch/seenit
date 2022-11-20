@@ -7,7 +7,7 @@ import {useState, useEffect, useContext} from 'react';
 import { UserContext } from "../App";
 import CreatePostBar from "./CreateCommunity/create-post-bar";
 import { Routes, Route } from "react-router-dom";
-import Comments from './Post/comments';
+import Comments from './Post/Comments/comments';
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import React from "react";
-import { getRepliedComments, createComment } from "../../firebase";
+import { getRepliedComments, createComment } from "../../../../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUp,
@@ -8,7 +8,8 @@ import {
   faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import { UserContext } from "../../App";
+import { UserContext } from "../../../../App";
+import BodyForm from "../BodyForm";
 interface CommentDetails {
   username: string;
   timestamp: number;
@@ -49,6 +50,10 @@ function Comment({
       window.location.reload();
     }
   };
+
+  const hideReplyForm = () => {
+    setHideReply(true);
+  }
   return (
     <React.Fragment>
       <div className="flex flex-col w-full px-2 mb-2">
@@ -74,37 +79,20 @@ function Comment({
           </div>
         </div>
         <div className={`${!hideReply ? "visible" : "hidden"} px-8 w-full mt-8`}>
-          <textarea
-            className="px-4 py-2 resize-y rounded-t border border-gray-400 w-full focus:outline-none"
-            placeholder="What are your thoughts?"
-            onChange={(e) => {
-              setThoughts(e.target.value);
-            }}
+          <BodyForm 
+          value={thoughts}
+          onChange={setThoughts}
+          isWorking={false}
+          onSubmit={postReply}
+          onCancel={hideReplyForm}
+          disabled={user === null || thoughts.length === 0}
           />
-          <div className="bg-gray-300 p-1">
-            <div className="flex">
-                <button className=" ml-auto text-sm font-semibold text-red-500 px-5 py-0.5" onClick={(e) => {setHideReply(true)}}>
-                    Cancel
-                </button>
-              <button
-                className={`${
-                  thoughts.length === 0 || user === null
-                    ? "bg-gray-700/[0.4] hover:cursor-not-allowed"
-                    : "bg-gray-700"
-                } rounded-2xl text-sm font-semibold text-white px-5 py-0.5`}
-                disabled={thoughts.length === 0 || user === null}
-                onClick={postReply}
-              >
-                Reply
-              </button>
-            </div>
-          </div>
         </div>
       </div>
       {childComments.length > 0 && (
         <>
           <div className={`${hideChildren ? "hidden" : "visible"} flex`}>
-            <button className="collapse-line ml-2"/>
+            <button className="collapse-line ml-2" onClick={() => setHideChildren(true)}/>
             <div className="grow-1 pl-[0.5rem] w-full">
               {childComments.map((comment: any) => {
                 return (

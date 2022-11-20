@@ -34,7 +34,7 @@ const Button = forwardRef(({className, children, icon, iconSize=16, disabled = f
                 icon
             )}
 
-            {children && <span>{children}</span>}
+            {children && <span className={className}>{children}</span>}
         </StyledButton>
     )
 }

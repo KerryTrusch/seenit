@@ -1,6 +1,6 @@
 import styled, {css} from 'styled-components';
 
-import { color, font } from 'shared/utils/styles';
+import { color, font } from '../../utils/styles';
 
 export const StyledTextarea = styled.div`
   display: inline-block;

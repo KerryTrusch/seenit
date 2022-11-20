@@ -3,14 +3,15 @@ import {
   loadCommentsFromPost,
   createComment,
   getSinglePost,
-} from "../../firebase";
-import TextPost from "../PostTypes/text-post";
-import LinkPost from "../PostTypes/link-post";
+} from "../../../firebase";
+import TextPost from "../../PostTypes/text-post";
+import LinkPost from "../../PostTypes/link-post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import CommunitySidebar from "../Sidebar/community-sidebar";
-import Comment from "./comment";
-import { UserContext } from "../../App";
+import CommunitySidebar from "../../Sidebar/community-sidebar";
+import Comment from "./Comment/comment";
+import { UserContext } from "../../../App";
+import Textarea from "../../../Shared/components/Textarea";
 interface CommentsDetails {
   show: boolean;
   hideModal: any;
@@ -123,12 +124,12 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
               <div className="flex flex-col w-full bg-white rounded">
                 {renderSwitch()}
                 <div className="px-8 w-full mt-8">
-                  <textarea
-                    className="px-4 py-2 resize-y rounded-t border border-gray-400 w-full focus:outline-none"
-                    placeholder="What are your thoughts?"
-                    onChange={(e) => {
-                      setThoughts(e.target.value);
-                    }}
+                  <Textarea
+                  value={thoughts}
+                  placeholder="What are your thoughts?"
+                  onChange={setThoughts}
+                  className="resize-y rounded-t border border-gray-400 w-full focus:outline-none bg-white"
+                  minRows={4}
                   />
                   <div className="bg-gray-300 p-1">
                     <div className="flex">

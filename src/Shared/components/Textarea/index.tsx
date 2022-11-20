@@ -1,12 +1,13 @@
-import {forwardRef} from 'react';
+import {forwardRef, HTMLAttributes} from 'react';
 import { StyledTextarea } from './Styles';
 import TextareaAutosize from 'react-textarea-autosize';
-interface TextareaDetails {
+import { TextareaAutosizeProps } from 'react-textarea-autosize';
+interface TextareaDetails extends TextareaAutosizeProps {
     className?: string;
     invalid?: boolean;
-    minRows: number;
+    minRows?: number;
     value: string;
-    onChange: (e: string) => void;
+    onChange: any;
 }
 
 const Textarea = forwardRef(({className, invalid, onChange, ...textareaProps}: TextareaDetails, ref: any) => {
