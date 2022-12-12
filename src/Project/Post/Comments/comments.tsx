@@ -4,14 +4,13 @@ import {
   createComment,
   getSinglePost,
 } from "../../../firebase";
-import TextPost from "../../PostTypes/text-post";
-import LinkPost from "../../PostTypes/link-post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import CommunitySidebar from "../../Sidebar/community-sidebar";
 import Comment from "./Comment/comment";
 import { UserContext } from "../../../App";
 import Textarea from "../../../Shared/components/Textarea";
+import { renderSwitch } from "../../../Shared/utils/renderPost";
 interface CommentsDetails {
   show: boolean;
   hideModal: any;
@@ -44,56 +43,7 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
       window.location.reload();
     }
   };
-  function renderSwitch() {
-    switch (post.type) {
-      case "text":
-        return (
-          <TextPost
-            subreddit={post.communityName}
-            user={post.author}
-            upvotes={post.upvotes}
-            title={post.postTitle}
-            numComments={0}
-            isFrontPage={false}
-            key={post.hash}
-            hash={post.hash}
-            isEmbeded={true}
-            body={post.postBody}
-            timestamp={post.timestamp}
-          />
-        );
-      case "link":
-        return (
-          <LinkPost
-            subreddit={post.communityName}
-            user={post.author}
-            upvotes={post.upvotes}
-            title={post.postTitle}
-            numComments={0}
-            isFrontPage={false}
-            linksrc={post.linksrc}
-            key={post.hash}
-            hash={post.hash}
-            isEmbeded={true}
-          />
-        );
-      default:
-        return (
-          <LinkPost
-            subreddit={post.communityName}
-            user={post.author}
-            upvotes={post.upvotes}
-            title={post.postTitle}
-            numComments={0}
-            isFrontPage={false}
-            linksrc={post.linksrc}
-            key={post.hash}
-            hash={post.hash}
-            isEmbeded={true}
-          />
-        );
-    }
-  }
+  
   return (
     <div
       className={`${
@@ -122,7 +72,7 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
           <div className="flex flex-col">
             <div className="flex">
               <div className="flex flex-col w-full bg-white rounded">
-                {renderSwitch()}
+                {renderSwitch(post, false)}
                 <div className="px-8 w-full mt-8">
                   <Textarea
                   value={thoughts}

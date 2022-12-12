@@ -19,7 +19,7 @@ interface PostDetails {
   isFrontPage: boolean;
   hash: string;
   isEmbeded: boolean;
-  body: string;
+  imagehash: string;
   timestamp: number;
 }
 function ImagePost({
@@ -31,7 +31,7 @@ function ImagePost({
   isFrontPage,
   hash,
   isEmbeded,
-  body,
+  imagehash,
   timestamp
 }: PostDetails) {
   const [upordown, setUpordown] = useState(0);
@@ -86,7 +86,7 @@ function ImagePost({
               </div>
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
-            <div className={`${isEmbeded ? "visible" : "hidden"} text-md text-black mb-2`}>{body}</div>
+            {/*<div className={`${isEmbeded ? "visible" : "hidden"} text-md text-black mb-2`}>{body}</div>*/}
             <div className="flex text-gray-500">
               <Link
                 to={`${

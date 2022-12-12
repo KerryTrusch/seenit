@@ -1,6 +1,4 @@
 import Sortbar from "./Sidebar/sortbar";
-import TextPost from "./PostTypes/text-post";
-import LinkPost from "./PostTypes/link-post"; 
 import CommunitySidebar from "./Sidebar/community-sidebar";
 import { getCommunityData, getTotalUsersInCommunity, getPostsFromCommunity } from "../firebase";
 import {useState, useEffect, useContext} from 'react';
@@ -8,6 +6,7 @@ import { UserContext } from "../App";
 import CreatePostBar from "./CreateCommunity/create-post-bar";
 import { Routes, Route } from "react-router-dom";
 import Comments from './Post/Comments/comments';
+import { postsToJSXArray } from "../Shared/utils/renderPost";
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);
@@ -62,22 +61,7 @@ function SeenitPage() {
               <div className="w-full lg:w-[640px] flex flex-col justify-center lg:mx-7">
                 <CreatePostBar />
                 <Sortbar posts={posts} setPosts={setPosts} />
-                {posts.map((post: any) => {
-                  if (post.type === "text") {
-                    return (
-                      <TextPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} key={post.hash} hash={post.hash} isEmbeded={true} body={post.postBody} timestamp={post.timestamp}/>
-                    )
-                  } else if (post.type === "link") {
-                    return (
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
-                    )
-                  } else {
-                    return (
-                       //Eventually turn this into an image post
-                      <LinkPost subreddit={post.communityName} user={post.author} upvotes={post.upvotes} title={post.postTitle} numComments={post.numComments} isFrontPage={false} linksrc={post.linksrc} key={post.hash} hash={post.hash} isEmbeded={true} />
-                    )
-                  }
-                })}
+                {postsToJSXArray(posts, false)}
               </div>
               <div className="hidden lg:block flex flex-col">
                 <CommunitySidebar description={pageData.description} numUsers={numUsers}/>
