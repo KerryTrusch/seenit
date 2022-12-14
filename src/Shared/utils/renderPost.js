@@ -10,7 +10,7 @@ export const renderSwitch = (post, isFrontPage) => {
             user={post.author}
             upvotes={post.upvotes}
             title={post.postTitle}
-            numComments={0}
+            numComments={post.numComments}
             isFrontPage={isFrontPage}
             key={post.hash}
             hash={post.hash}
@@ -26,7 +26,7 @@ export const renderSwitch = (post, isFrontPage) => {
             user={post.author}
             upvotes={post.upvotes}
             title={post.postTitle}
-            numComments={0}
+            numComments={post.numComments}
             isFrontPage={isFrontPage}
             linksrc={post.linksrc}
             key={post.hash}
@@ -42,9 +42,9 @@ export const renderSwitch = (post, isFrontPage) => {
             user={post.author}
             upvotes={post.upvotes}
             title={post.postTitle}
-            numComments={0}
+            numComments={post.numComments}
             isFrontPage={isFrontPage}
-            imagehash={"ABC"}
+            imagehash={post.imagesrc}
             key={post.hash}
             hash={post.hash}
             isEmbeded={true}

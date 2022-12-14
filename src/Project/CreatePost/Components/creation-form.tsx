@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { faLink, faImage, faKeyboard } from "@fortawesome/free-solid-svg-icons";
 import { createPost } from "../../../firebase";
 import { useNavigate } from "react-router-dom";
 import CreationFormHeaderButton from "./creation-form-header-button";
 import CreationFormSubmit from "./creation-form-submit";
 import CreationFormBody from "./creation-form-body";
+import CommunityFormTitle from "./community-form-title";
 interface CreationFormDetails {
   community: string | null;
   user: any;
@@ -13,10 +14,16 @@ const CreationForm = ({ community, user }: CreationFormDetails) => {
   const [link, setLink] = useState(null);
   const [body, setBody] = useState<string | null>(null);
   const [title, setTitle] = useState<string | null>(null);
-  const [imagesrc, setImagesrc] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [postType, setPostType] = useState(1);
   const [titleCharacters, setTitleCharacter] = useState(0);
   const navigate = useNavigate();
+  const handleFileUpload = (evt: any) => {
+    setSelectedFile(evt.target.files[0]);
+  }
+  useEffect(() => {
+    //console.log(selectedFile + " " + title);
+  }, [selectedFile])
   const handleCreatePost = (e: any) => {
     e.preventDefault();
     const timestamp = Date.now();
@@ -40,7 +47,7 @@ const CreationForm = ({ community, user }: CreationFormDetails) => {
           title,
           community,
           null,
-          imagesrc,
+          selectedFile,
           null,
           "image",
           timestamp,
@@ -98,13 +105,15 @@ const CreationForm = ({ community, user }: CreationFormDetails) => {
           />
         </div>
         <div className="flex flex-col p-3 w-full">
-          <CreationFormBody postType={postType} setBody={setBody} setTitle={setTitle} setTitleCharacter={setTitleCharacter} titleCharacters={titleCharacters} setImagesrc={setImagesrc} setLink={setLink} />
+          <CommunityFormTitle title={title} titleCharacters={titleCharacters} setTitleCharacter={setTitleCharacter} setTitle={setTitle} />
+          <CreationFormBody postType={postType} setBody={setBody}  setImagesrc={handleFileUpload} setLink={setLink} />
           <div className="border-b text-gray-300 mb-2"></div>
           <CreationFormSubmit
             disabled={
               community === null ||
-              title === null ||
-              (postType === 2 && imagesrc === null) ||
+              title === null || titleCharacters > 300 ||
+              user === null ||
+              (postType === 2 && selectedFile === null) ||
               (postType === 3 && link === null)
             }
           />

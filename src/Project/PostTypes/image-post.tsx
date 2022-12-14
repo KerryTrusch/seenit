@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { upvotePost, downvotePost } from "../../firebase";
 import { useState } from "react";
 import moment from "moment";
+import LoadedImage from "../../Shared/components/LoadedImage";
 interface PostDetails {
   subreddit: string;
   user: string;
@@ -86,6 +87,7 @@ function ImagePost({
               </div>
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
+            <LoadedImage externalHash={imagehash} className="mx-auto"/>
             {/*<div className={`${isEmbeded ? "visible" : "hidden"} text-md text-black mb-2`}>{body}</div>*/}
             <div className="flex text-gray-500">
               <Link

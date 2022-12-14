@@ -4,6 +4,7 @@ import CommunityModal from "./CreateCommunity/community-modal";
 import { useState, useEffect } from "react";
 import { getPostsForHomepage } from "../firebase";
 import { postsToJSXArray } from "../Shared/utils/renderPost";
+import Spinner from "../Shared/components/Spinner";
 //7 margin for between elements
 
 function HomePage() {
@@ -32,6 +33,7 @@ function HomePage() {
               Popular posts
             </div>
             <Sortbar posts={globalPosts} setPosts={setGlobalPosts} />
+            {globalPosts.length === 0 && <Spinner size={64} className="mx-auto mt-10"/>}
             {postsToJSXArray(globalPosts, true)}
           </div>
           <div className="hidden lg:block flex flex-col mt-7">

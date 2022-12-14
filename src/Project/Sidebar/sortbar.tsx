@@ -54,9 +54,6 @@ function Sortbar({posts, setPosts}: SortDetails) {
                 Top
               </span>
             </div>
-            <Button onClick={() => {setSelected(3); sortTop();}} className="hover:bg-gray-200">
-              Test
-            </Button>
           </div>
         </div>
       </div>

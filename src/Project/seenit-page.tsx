@@ -7,6 +7,7 @@ import CreatePostBar from "./CreateCommunity/create-post-bar";
 import { Routes, Route } from "react-router-dom";
 import Comments from './Post/Comments/comments';
 import { postsToJSXArray } from "../Shared/utils/renderPost";
+import Spinner from "../Shared/components/Spinner";
 function SeenitPage() {
     const [pageData, setPageData] = useState<any | null>({});
     const [numUsers, setNumUsers] = useState<number>(0);
@@ -61,6 +62,7 @@ function SeenitPage() {
               <div className="w-full lg:w-[640px] flex flex-col justify-center lg:mx-7">
                 <CreatePostBar />
                 <Sortbar posts={posts} setPosts={setPosts} />
+                {posts.length === 0 && <Spinner className="mx-auto" size={64} />}
                 {postsToJSXArray(posts, false)}
               </div>
               <div className="hidden lg:block flex flex-col">

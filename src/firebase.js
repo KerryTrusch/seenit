@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, setDoc, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
 
@@ -73,6 +73,7 @@ export async function getCommunityNames() {
   return ret;
 }
 
+
 export async function createPost(title, community, link, image, body, postType, timestamp, username, hash) {
   const data = {
     postTitle: title,
@@ -86,6 +87,14 @@ export async function createPost(title, community, link, image, body, postType, 
     upvotes: 0,
     hash: hash,
     numComments: 0
+  }
+  if (postType === "image") {
+    let imageHash = Date.now().toString(36);
+    const imageRef = ref(storage, imageHash);
+    uploadBytes(imageRef, image).then((snapshot) => {
+      console.log("Successfully uploaded the file");
+    });
+    data.imagesrc = imageHash;
   }
   setDoc(doc(db, "posts", hash), data);
 }
@@ -133,7 +142,15 @@ export async function downvotePost(hash) {
     upvotes: upvotes-1
   });
 }
-
+async function _incrementNumComments(hash) {
+  const postRef = doc(db, "posts", hash);
+  const postSnap = await getDoc(postRef);
+  console.log(postSnap.data())
+  const coms = postSnap.data().numComments;
+  updateDoc(postRef, {
+    numComments: coms+1
+  });
+}
 export async function createComment(user, body, timestamp, parentID, postHash, commentHash) {
   const data = {
     user: user,
@@ -145,7 +162,7 @@ export async function createComment(user, body, timestamp, parentID, postHash, c
     upvotes: 0
   }
   await setDoc(doc(db, "comments", commentHash), data);
-  _incrementNumComments(postHash);
+  await _incrementNumComments(postHash);
 }
 
 export async function loadCommentsFromPost(hash) {
@@ -186,11 +203,12 @@ export async function getRepliedComments(parentID) {
   return ret;
 }
 
-async function _incrementNumComments(hash) {
-  const postRef = doc(db, "posts", hash);
-  const postSnap = await getDoc(postRef);
-  const coms = postSnap.data().numComments;
-  updateDoc(postRef, {
-    numComments: coms+1
-  });
+
+export async function getImage(imagehash) {
+  const img = document.createElement('img');
+  await getDownloadURL(ref(storage, imagehash))
+  .then((url) => {
+    img.setAttribute('src', url);
+  })
+  return img;
 }

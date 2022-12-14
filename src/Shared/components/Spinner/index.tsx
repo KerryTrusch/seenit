@@ -1,8 +1,8 @@
 
 interface SpinnerDetails {
-    className: string;
-    size: number;
-    color: string;
+    className?: string;
+    size?: number;
+    color?: string;
 }
 
 
