@@ -88,7 +88,6 @@ function ImagePost({
             </div>
             <div className="text-lg font-semibold mb-2">{title}</div>
             <LoadedImage externalHash={imagehash} className="mx-auto"/>
-            {/*<div className={`${isEmbeded ? "visible" : "hidden"} text-md text-black mb-2`}>{body}</div>*/}
             <div className="flex text-gray-500">
               <Link
                 to={`${

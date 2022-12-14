@@ -88,7 +88,7 @@ function LinkPost({
               >
                 <img
                   className="rounded h-[100px] w-[150px]"
-                  src={`/linkimagenotfound.png`}
+                  src={`/linkpreview.png`}
                   alt="link preview"
                 />
               </a>
