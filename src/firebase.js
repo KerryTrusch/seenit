@@ -1,28 +1,38 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, setDoc, doc, getDoc, query, where, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  setDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
+  apiKey: "AIzaSyD52fctGJgix4vZRVdEl2GfOfkTlWVUWLM",
 
-    apiKey: "AIzaSyD52fctGJgix4vZRVdEl2GfOfkTlWVUWLM",
-  
-    authDomain: "chataround-e0a27.firebaseapp.com",
-  
-    projectId: "chataround-e0a27",
-  
-    storageBucket: "chataround-e0a27.appspot.com",
-  
-    messagingSenderId: "864357739764",
-  
-    appId: "1:864357739764:web:36282fb9835bfb3cc602a1",
-  
-    measurementId: "G-N59MWEL65N"
-  
-  };
-  
-  
+  authDomain: "chataround-e0a27.firebaseapp.com",
+
+  projectId: "chataround-e0a27",
+
+  storageBucket: "chataround-e0a27.appspot.com",
+
+  messagingSenderId: "864357739764",
+
+  appId: "1:864357739764:web:36282fb9835bfb3cc602a1",
+
+  measurementId: "G-N59MWEL65N",
+};
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
@@ -30,11 +40,63 @@ export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 
+export async function createUser(email, username, password) {
+  let user = null;
+  await createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      user = userCredential.user;
+
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode + ": " + errorMessage);
+    });
+  const data = {
+    username: username,
+    email: email,
+    karma: 0,
+    profilePictureHash: null,
+  };
+  setDoc(doc(db, "users", email), data);
+  return user;
+}
+
+export async function signInUser(email, password) {
+  let user = null;
+  await signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode + ": " + errorMessage);
+    });
+  return user;
+}
+
+export async function uploadProfilePicture(email, image) {
+  let imageHash = Date.now().toString(36);
+  const imageRef = ref(storage, imageHash);
+  uploadBytes(imageRef, image).then((snapshot) => {
+    console.log("Successfully uploaded the file");
+  });
+  const postRef = doc(db, "users", email);
+  updateDoc(postRef, {
+    profilePictureHash: imageHash
+  });
+}
+
 export function createCommunity(name, user) {
   const data = {
     communityName: name,
-    description: "Welcome to " + name
-  }
+    description: "Welcome to " + name,
+  };
   setDoc(doc(db, "communities", name), data);
   joinCommunity(name, user);
 }
@@ -42,9 +104,9 @@ export function createCommunity(name, user) {
 export function joinCommunity(name, user) {
   const data = {
     email: user,
-    communityName: name
+    communityName: name,
   };
-  setDoc(doc(db, "users_in_community", name+user), data);
+  setDoc(doc(db, "users_in_community", name + user), data);
 }
 
 export async function getCommunityData(name) {
@@ -58,7 +120,10 @@ export async function getCommunityData(name) {
 }
 
 export async function getTotalUsersInCommunity(name) {
-  const q = query(collection(db, "users_in_community"), where("communityName", "==", name));
+  const q = query(
+    collection(db, "users_in_community"),
+    where("communityName", "==", name)
+  );
   const qSnap = await getDocs(q);
   return qSnap.size;
 }
@@ -66,15 +131,24 @@ export async function getTotalUsersInCommunity(name) {
 export async function getCommunityNames() {
   const q = query(collection(db, "communities"));
   const qSnap = await getDocs(q);
-  const ret = []
+  const ret = [];
   qSnap.forEach((doc) => {
     ret.push(doc.data().communityName);
-  })
+  });
   return ret;
 }
 
-
-export async function createPost(title, community, link, image, body, postType, timestamp, username, hash) {
+export async function createPost(
+  title,
+  community,
+  link,
+  image,
+  body,
+  postType,
+  timestamp,
+  username,
+  hash
+) {
   const data = {
     postTitle: title,
     communityName: community,
@@ -86,8 +160,8 @@ export async function createPost(title, community, link, image, body, postType, 
     author: username,
     upvotes: 0,
     hash: hash,
-    numComments: 0
-  }
+    numComments: 0,
+  };
   if (postType === "image") {
     let imageHash = Date.now().toString(36);
     const imageRef = ref(storage, imageHash);
@@ -100,22 +174,25 @@ export async function createPost(title, community, link, image, body, postType, 
 }
 
 export async function getPostsFromCommunity(community) {
-  const q = query(collection(db, "posts"), where("communityName", "==", community));
+  const q = query(
+    collection(db, "posts"),
+    where("communityName", "==", community)
+  );
   const qSnap = await getDocs(q);
-  const ret = []
+  const ret = [];
   qSnap.forEach((doc) => {
     ret.push(doc.data());
-  })
+  });
   return ret;
 }
 
 export async function getPostsForHomepage() {
   const q = query(collection(db, "posts"));
   const qSnap = await getDocs(q);
-  const ret = []
+  const ret = [];
   qSnap.forEach((doc) => {
     ret.push(doc.data());
-  })
+  });
   return ret;
 }
 
@@ -130,7 +207,7 @@ export async function upvotePost(hash) {
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
   updateDoc(postRef, {
-    upvotes: upvotes+1
+    upvotes: upvotes + 1,
   });
 }
 
@@ -139,19 +216,26 @@ export async function downvotePost(hash) {
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
   updateDoc(postRef, {
-    upvotes: upvotes-1
+    upvotes: upvotes - 1,
   });
 }
 async function _incrementNumComments(hash) {
   const postRef = doc(db, "posts", hash);
   const postSnap = await getDoc(postRef);
-  console.log(postSnap.data())
+  console.log(postSnap.data());
   const coms = postSnap.data().numComments;
   updateDoc(postRef, {
-    numComments: coms+1
+    numComments: coms + 1,
   });
 }
-export async function createComment(user, body, timestamp, parentID, postHash, commentHash) {
+export async function createComment(
+  user,
+  body,
+  timestamp,
+  parentID,
+  postHash,
+  commentHash
+) {
   const data = {
     user: user,
     body: body,
@@ -159,19 +243,23 @@ export async function createComment(user, body, timestamp, parentID, postHash, c
     parentID: parentID,
     postHash: postHash,
     commentID: commentHash,
-    upvotes: 0
-  }
+    upvotes: 0,
+  };
   await setDoc(doc(db, "comments", commentHash), data);
   await _incrementNumComments(postHash);
 }
 
 export async function loadCommentsFromPost(hash) {
-  const q = query(collection(db, "comments"), where("postHash", "==", hash), where("parentID", "==", null));
+  const q = query(
+    collection(db, "comments"),
+    where("postHash", "==", hash),
+    where("parentID", "==", null)
+  );
   const qSnap = await getDocs(q);
-  const ret = []
+  const ret = [];
   qSnap.forEach((doc) => {
     ret.push(doc.data());
-  })
+  });
   return ret;
 }
 
@@ -180,7 +268,7 @@ export async function upvoteComment(commentHash) {
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
   updateDoc(postRef, {
-    upvotes: upvotes+1
+    upvotes: upvotes + 1,
   });
 }
 
@@ -189,26 +277,27 @@ export async function downvoteComment(commentHash) {
   const postSnap = await getDoc(postRef);
   const upvotes = postSnap.data().upvotes;
   updateDoc(postRef, {
-    upvotes: upvotes-1
+    upvotes: upvotes - 1,
   });
 }
 
 export async function getRepliedComments(parentID) {
-  const q = query(collection(db, "comments"), where("parentID", "==", parentID));
+  const q = query(
+    collection(db, "comments"),
+    where("parentID", "==", parentID)
+  );
   const qSnap = await getDocs(q);
-  const ret = []
+  const ret = [];
   qSnap.forEach((doc) => {
     ret.push(doc.data());
-  })
+  });
   return ret;
 }
 
-
 export async function getImage(imagehash) {
-  const img = document.createElement('img');
-  await getDownloadURL(ref(storage, imagehash))
-  .then((url) => {
-    img.setAttribute('src', url);
-  })
+  const img = document.createElement("img");
+  await getDownloadURL(ref(storage, imagehash)).then((url) => {
+    img.setAttribute("src", url);
+  });
   return img;
 }
