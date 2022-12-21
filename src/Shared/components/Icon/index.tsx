@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface IconDetails {
-  className: string;
+  className?: string;
   icon: any;
+  onClick?: any;
 }
 
-const Icon = ({ icon, className }: IconDetails) => {
+const Icon = ({ icon, className, onClick }: IconDetails) => {
   return (
-    <div className={className}>
+    <div className={className} onClick={onClick}>
       <FontAwesomeIcon icon={icon} />
     </div>
   );

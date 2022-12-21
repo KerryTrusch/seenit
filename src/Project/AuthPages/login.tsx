@@ -1,21 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import {
-  signInWithEmailAndPassword,
-  browserSessionPersistence,
-  setPersistence,
-} from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../../firebase";
 interface LoginDetails {
-  show: boolean;
-  closeModal: () => void;
   setUser: any;
   switchTabs: any;
+  login: any;
+  validateEmail: () => RegExpMatchArray | null;
+  validatePassword: () => boolean;
+  setEmail: any;
+  setPassword: any;
 }
-function Login({ show, closeModal, setUser, switchTabs }: LoginDetails) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Login({ setUser, switchTabs, login, validateEmail, validatePassword, setEmail, setPassword }: LoginDetails) {
   const [showErrEmail, setShowErrEmail] = useState(false);
   const [showErrPass, setShowErrPass] = useState(false);
   async function handleLogin(e: any) {
@@ -29,49 +22,13 @@ function Login({ show, closeModal, setUser, switchTabs }: LoginDetails) {
     } else {
       setShowErrEmail(false);
       setShowErrPass(false);
-      await setPersistence(auth, browserSessionPersistence);
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          setUser(user);
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode + ": " + errorMessage);
-        });
+      let user = await login();
+      localStorage.setItem("uid", user.uid);
+      setUser(user);
     }
   }
 
-  const validateEmail = () => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
-
-  const validatePassword = () => {
-    return password.length >= 6 && password.length <= 30;
-  };
-
   return (
-    <div
-      className={`${
-        show ? "block" : "hidden"
-      } fixed top-0 left-0 w-full h-full z-10 bg-black/[0.6]`}
-    >
-      <div
-        className="flex flex-col fixed top-[50%] left-[50%] w-[400px] bg-white rounded h-auto translate-x-[-50%] translate-y-[-50%]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <FontAwesomeIcon
-          className="ml-auto cursor-pointer pt-4 pr-4"
-          icon={faX}
-          onClick={closeModal}
-        />
         <form
           className="mb-10"
           onSubmit={(e) => {
@@ -118,27 +75,25 @@ function Login({ show, closeModal, setUser, switchTabs }: LoginDetails) {
               placeholder="Password"
             />
             <button
-              className="flex flex-col align-center mt-4 p-1.5 rounded-3xl seenit-orange text-white border-none h-[40px] cursor-pointer w-full"
+              className="text-center align-center mt-4 p-1.5 rounded-3xl seenit-orange text-white border-none h-[40px] cursor-pointer w-full"
               type="submit"
             >
               Continue
             </button>
           </div>
           <span className="text-xs px-12">
-            Already a user?{" "}
+            Don't have an account?{" "}
             <button
               className="text-blue-400 underline"
               onClick={(e) => {
                 e.preventDefault();
-                switchTabs();
+                switchTabs(1);
               }}
             >
-              Login here
+              Sign up here
             </button>
           </span>
         </form>
-      </div>
-    </div>
   );
 }
 

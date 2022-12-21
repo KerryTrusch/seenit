@@ -1,34 +1,46 @@
 import { Link } from "react-router-dom";
+import {getSensitiveUserInformation} from "../firebase"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
-import Signup from "./AuthPages/signup";
-import Login from "./AuthPages/login";
+import AuthModals from "./AuthPages";
 import { UserContext } from "../App";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+import { useEffect } from "react";
 interface NavDetails {
   setUser: any;
 }
 function Navbar({ setUser }: NavDetails) {
-  const [showSignup, setShowSignup] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const [userDropdown, setUserDropdown] = useState(false);
+  const [authType, setAuthType] = useState(0);
+  const [clicks, setClicks] = useState(0);
+  const [userData, setUserData] = useState<any | null>(null);
   const user = useContext<any | null>(UserContext);
-  const closeSignup = () => {
-    setShowSignup(false);
-  };
-  const closeLogin = () => {
-    setShowLogin(false);
-  };
-  const moveToLoginFromSignup = () => {
-    setShowSignup(false);
-    setShowLogin(true);
-  };
-  const moveToSignupFromLogin = () => {
-    setShowLogin(false);
-    setShowSignup(true);
-  };
+  const handleClick = (num: number) => {
+    setAuthType(num);
+    setClicks(clicks + 1);
+  }
+  useEffect(() => {
+    if (clicks > 0) {
+      setShowAuth(true);
+    }
+  }, [clicks]);
+  useEffect(() => {
+    async function getUserData() {
+      let uid = localStorage.getItem("uid");
+      if (uid !== null) {
+        let data = await getSensitiveUserInformation(uid);
+        console.log(data);
+        setUserData(data);
+      }
+    }
+    getUserData();
+  }, [])
+  const closeAuthModal = () => {
+    setShowAuth(false);
+  }
   const openDropdown = () => {
     if (userDropdown) {
       setUserDropdown(false);
@@ -40,7 +52,7 @@ function Navbar({ setUser }: NavDetails) {
     signOut(auth);
     window.location.reload();
   }
-  if (user === null) {
+  if (user === null || user === undefined || userData === null || userData === undefined) {
     return (
       <div className="flex bg-white w-full p-2">
         <Link className="mr-auto my-auto max-w-[100px]" to={`/`}>
@@ -54,7 +66,7 @@ function Navbar({ setUser }: NavDetails) {
           <button
             className="border border-blue-400 rounded-2xl px-8 py-0.5 pb-1.5 cursor-pointer hover:bg-[#faf7f7] text-sm font-bold text-blue-500"
             onClick={(e) => {
-              setShowSignup(true);
+              handleClick(1);
             }}
           >
             Sign Up
@@ -62,23 +74,17 @@ function Navbar({ setUser }: NavDetails) {
           <button
             className="hover:bg-blue-500/75 px-8 pb-1.5 py-0.5 rounded-2xl mx-3 bg-blue-500 text-white m-auto cursor-pointer text-sm font-bold"
             onClick={(e) => {
-              setShowLogin(true);
+              handleClick(0);
             }}
           >
             Log In
           </button>
         </div>
-        <Signup
-          show={showSignup}
-          closeModal={closeSignup}
-          setUser={setUser}
-          switchTabs={moveToLoginFromSignup}
-        />
-        <Login
-          show={showLogin}
-          closeModal={closeLogin}
-          setUser={setUser}
-          switchTabs={moveToSignupFromLogin}
+        <AuthModals
+        closeModal={closeAuthModal}
+        show={showAuth}
+        setUser={setUser}
+        modalType={authType}
         />
       </div>
     );
@@ -100,8 +106,8 @@ function Navbar({ setUser }: NavDetails) {
               alt="profile"
             />
             <div className="flex flex-col">
-              <span className="text-xs font-bold">{user.email}</span>
-              <div className="text-xs">0 karma</div>
+              <span className="text-xs font-bold">{userData.username}</span>
+              <div className="text-xs">{userData.karma}</div>
             </div>
             <FontAwesomeIcon className="my-auto ml-10" icon={faChevronDown} />
           </div>

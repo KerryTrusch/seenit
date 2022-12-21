@@ -1,43 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
-import { auth } from "../../firebase";
+  import { useState } from "react";
 interface SignupDetails {
-  show: boolean;
-  closeModal: () => void;
-  setUser: any;
   switchTabs: any;
+  email: string | null;
+  setEmail: any;
 }
-function Signup({ show, closeModal, setUser, switchTabs }: SignupDetails) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function Signup({ switchTabs, email, setEmail }: SignupDetails) {
   const [showErrEmail, setShowErrEmail] = useState(false);
-  const [showErrPass, setShowErrPass] = useState(false);
-  function handleCreateAccount(e: any) {
+
+  function handleContinue(e: any) {
     e.preventDefault();
     if (!validateEmail()) {
       setShowErrEmail(true);
-      setShowErrPass(false);
-    } else if (!validatePassword()) {
-      setShowErrPass(true);
-      setShowErrEmail(false);
     } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          setUser(user);
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode + ": " + errorMessage);
-        });
+      setShowErrEmail(false);
+      switchTabs(2);
     }
   }
-
   const validateEmail = () => {
     return String(email)
       .toLowerCase()
@@ -46,29 +24,11 @@ function Signup({ show, closeModal, setUser, switchTabs }: SignupDetails) {
       );
   };
 
-  const validatePassword = () => {
-    return password.length >= 6 && password.length <= 30;
-  };
-
   return (
-    <div
-      className={`${
-        show ? "block" : "hidden"
-      } fixed top-0 left-0 w-full h-full z-10 bg-black/[0.6]`}
-    >
-      <div
-        className="flex flex-col fixed top-[50%] left-[50%] w-[400px] bg-white rounded h-auto translate-x-[-50%] translate-y-[-50%]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <FontAwesomeIcon
-          className="ml-auto cursor-pointer pt-4 pr-4"
-          icon={faX}
-          onClick={closeModal}
-        />
         <form
           className="mb-10"
           onSubmit={(e) => {
-            handleCreateAccount(e);
+            handleContinue(e);
           }}
         >
           <div className="flex flex-col pt-16 px-10 text-center mb-4">
@@ -88,16 +48,8 @@ function Signup({ show, closeModal, setUser, switchTabs }: SignupDetails) {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
             />
-            <span className={`${showErrPass ? "visible" : "hidden"} text-red-500 text-sm`}> Passwords must be between 6 and 30 characters in length. </span>
-            <input
-              className="px-2.5 py-1.5 background-input border-none rounded-2xl text-[#737577] my-1.5"
-              id="PasswordInputSignin"
-              autoComplete="name"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-            />
             <button
-              className="flex flex-col align-center mt-4 p-1.5 rounded-3xl seenit-orange text-white border-none h-[40px] cursor-pointer w-full"
+              className="text-center align-center mt-4 p-1.5 rounded-3xl seenit-orange text-white border-none h-[40px] cursor-pointer w-full"
               type="submit"
             >
               Continue
@@ -109,15 +61,13 @@ function Signup({ show, closeModal, setUser, switchTabs }: SignupDetails) {
               className="text-blue-400 underline"
               onClick={(e) => {
                 e.preventDefault();
-                switchTabs();
+                switchTabs(0);
               }}
             >
               Login here
             </button>
           </span>
         </form>
-      </div>
-    </div>
   );
 }
 

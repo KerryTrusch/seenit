@@ -9,12 +9,14 @@ import {
   query,
   where,
   updateDoc,
+  increment,
 } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  browserSessionPersistence
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -41,12 +43,26 @@ export const auth = getAuth(app);
 export const storage = getStorage(app);
 
 export async function createUser(email, username, password) {
+  if (email === null || username === null || password === null) {
+    //will return error in future.
+    return;
+  }
   let user = null;
-  await createUserWithEmailAndPassword(auth, email, password)
+  let uid = null;
+  return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       user = userCredential.user;
-
+      uid = user.uid;
+      const data = {
+        uid: uid,
+        username: username,
+        email: email,
+        karma: 0,
+        profilePictureHash: null,
+      };
+      setDoc(doc(db, "users", username), data);
+      return user;
       // ...
     })
     .catch((error) => {
@@ -54,22 +70,19 @@ export async function createUser(email, username, password) {
       const errorMessage = error.message;
       console.log(errorCode + ": " + errorMessage);
     });
-  const data = {
-    username: username,
-    email: email,
-    karma: 0,
-    profilePictureHash: null,
-  };
-  setDoc(doc(db, "users", email), data);
-  return user;
 }
 
 export async function signInUser(email, password) {
-  let user = null;
-  await signInWithEmailAndPassword(auth, email, password)
+  if (email === null || password === null) {
+    //will return error in future
+    return null;
+  }
+  return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
-      user = userCredential.user;
+      
+      // user = userCredential.user;
+      return userCredential.user;
       // ...
     })
     .catch((error) => {
@@ -77,7 +90,6 @@ export async function signInUser(email, password) {
       const errorMessage = error.message;
       console.log(errorCode + ": " + errorMessage);
     });
-  return user;
 }
 
 export async function uploadProfilePicture(email, image) {
@@ -209,6 +221,14 @@ export async function upvotePost(hash) {
   updateDoc(postRef, {
     upvotes: upvotes + 1,
   });
+  changeUserKarma(postSnap.data().author, 1);
+}
+
+export async function changeUserKarma(username, upOrDown) {
+  let ref = doc(db, "users", username);
+  updateDoc(ref, {
+    karma: increment(1 * upOrDown)
+  })
 }
 
 export async function downvotePost(hash) {
@@ -218,6 +238,7 @@ export async function downvotePost(hash) {
   updateDoc(postRef, {
     upvotes: upvotes - 1,
   });
+  changeUserKarma(postSnap.data().author, -1);
 }
 async function _incrementNumComments(hash) {
   const postRef = doc(db, "posts", hash);
@@ -270,6 +291,7 @@ export async function upvoteComment(commentHash) {
   updateDoc(postRef, {
     upvotes: upvotes + 1,
   });
+  changeUserKarma(postSnap.data().author, 1);
 }
 
 export async function downvoteComment(commentHash) {
@@ -279,6 +301,7 @@ export async function downvoteComment(commentHash) {
   updateDoc(postRef, {
     upvotes: upvotes - 1,
   });
+  changeUserKarma(postSnap.data().author, -1);
 }
 
 export async function getRepliedComments(parentID) {
@@ -300,4 +323,24 @@ export async function getImage(imagehash) {
     img.setAttribute("src", url);
   });
   return img;
+}
+
+export async function getSensitiveUserInformation(uid) {
+  //check auth token to make sure you can access the private information
+  const q = query(
+    collection(db, "users"),
+    where("uid", "==", uid)
+  );
+  const qSnap = await getDocs(q);
+  let ret = null;
+  qSnap.forEach((data) => {
+    ret = data.data();  
+  })
+  return ret;
+  //if auth is successful, return everything from the user in the user collection
+  //in the public user function, you just return the public info about them. (name, karma).
+
+  //auth token (something containing a username and password) encoded with something simple in the header varifies api requests
+  //without the token, the request can just return the 403 error or whatever the authentication error number is 
+  //in our case, we send the uid as knowing this is as sensitive as a username:password combination
 }
