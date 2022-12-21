@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import {getSensitiveUserInformation} from "../firebase"
+import { getSensitiveUserInformation } from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useState } from "react";
@@ -8,6 +8,7 @@ import { UserContext } from "../App";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useEffect } from "react";
+import LoadedImage from "../Shared/components/LoadedImage";
 interface NavDetails {
   setUser: any;
 }
@@ -21,7 +22,7 @@ function Navbar({ setUser }: NavDetails) {
   const handleClick = (num: number) => {
     setAuthType(num);
     setClicks(clicks + 1);
-  }
+  };
   useEffect(() => {
     if (clicks > 0) {
       setShowAuth(true);
@@ -37,22 +38,27 @@ function Navbar({ setUser }: NavDetails) {
       }
     }
     getUserData();
-  }, [])
+  }, []);
   const closeAuthModal = () => {
     setShowAuth(false);
-  }
+  };
   const openDropdown = () => {
     if (userDropdown) {
       setUserDropdown(false);
     } else {
       setUserDropdown(true);
     }
-  }
+  };
   const signOutUser = () => {
     signOut(auth);
     window.location.reload();
-  }
-  if (user === null || user === undefined || userData === null || userData === undefined) {
+  };
+  if (
+    user === null ||
+    user === undefined ||
+    userData === null ||
+    userData === undefined
+  ) {
     return (
       <div className="flex bg-white w-full p-2">
         <Link className="mr-auto my-auto max-w-[100px]" to={`/`}>
@@ -81,10 +87,10 @@ function Navbar({ setUser }: NavDetails) {
           </button>
         </div>
         <AuthModals
-        closeModal={closeAuthModal}
-        show={showAuth}
-        setUser={setUser}
-        modalType={authType}
+          closeModal={closeAuthModal}
+          show={showAuth}
+          setUser={setUser}
+          modalType={authType}
         />
       </div>
     );
@@ -98,32 +104,35 @@ function Navbar({ setUser }: NavDetails) {
             alt="logo"
           />
         </Link>
-        <div className="flex ml-auto mr-2 hover:cursor-pointer border border-white hover:border-inherit relative" onClick={openDropdown}>
-          <div className="flex px-2 select-none">
-            <img
-              className="h-7 w-7 rounded mr-2 my-auto"
-              src={`/defaultPFP.png`}
-              alt="profile"
-            />
-            <div className="flex flex-col">
-              <span className="text-xs font-bold">{userData.username}</span>
-              <div className="text-xs">{userData.karma}</div>
+        <div className="flex ml-auto mr-2 relative" onClick={openDropdown}>
+          <div className="flex px-2 select-none hover:cursor-pointer border border-white hover:border-inherit">
+            <div className="flex mx-auto">
+              <div className="w-[30px] h-[30px] rounded-full mr-3">
+                <LoadedImage
+                  externalHash={userData.profilePictureHash}
+                  className="rounded-full"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-bold">{userData.username}</span>
+                <div className="text-xs">{userData.karma}</div>
+              </div>
+              <FontAwesomeIcon className="my-auto ml-10" icon={faChevronDown} />
             </div>
-            <FontAwesomeIcon className="my-auto ml-10" icon={faChevronDown} />
           </div>
-          <div className={`absolute ${userDropdown ? "visible" : "hidden"} top-10 w-full rounded bg-white`}>
+          <div
+            className={`absolute ${
+              userDropdown ? "visible" : "hidden"
+            } top-10 w-full rounded bg-white`}
+          >
             <div className="flex flex-col">
               <div className="pl-10 py-2 text-sm hover:bg-gray-400/[.4]">
-                <Link to={`/profile`}>
-                  Profile
-                </Link>
+                <Link to={`/profile`}>Profile</Link>
               </div>
             </div>
             <div className="flex flex-col ">
               <div className="pl-10 py-2 text-sm hover:bg-gray-400/[.4]">
-                <button onClick={signOutUser}>
-                  Log out
-                </button>
+                <button onClick={signOutUser}>Log out</button>
               </div>
             </div>
           </div>

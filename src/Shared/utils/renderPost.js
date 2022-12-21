@@ -35,7 +35,7 @@ export const renderSwitch = (post, isFrontPage) => {
             timestamp={post.timestamp}
           />
         );
-      default:
+      case "image":
         return (
           <ImagePost
             subreddit={post.communityName}
@@ -51,6 +51,10 @@ export const renderSwitch = (post, isFrontPage) => {
             timestamp={post.timestamp}
           />
         );
+      default:
+        return (
+          <div />
+        )
     }
 }
 

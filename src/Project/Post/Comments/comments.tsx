@@ -29,6 +29,8 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
     async function grabComments() {
       const data = await loadCommentsFromPost(hash);
       const postData = await getSinglePost(hash);
+      console.log(postData);
+      //give renderSwitch a default of an empty div instead of image
       display();
       setRootComments(data);
       setPost(postData);
@@ -109,6 +111,7 @@ function Comments({ show, hideModal, display, numUsers }: CommentsDetails) {
                         parentID={comment.parentID}
                         commentID={comment.commentID}
                         postID={post.hash}
+                        pfpHash={comment.pfpHash === undefined ? "defaultPFP1.png" : comment.pfpHash}
                       />
                     </div>
                   );

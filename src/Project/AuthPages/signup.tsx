@@ -1,4 +1,5 @@
-  import { useState } from "react";
+  import { useState, useEffect } from "react";
+  import { checkEmailValidity } from "../../firebase";
 interface SignupDetails {
   switchTabs: any;
   email: string | null;
@@ -6,14 +7,20 @@ interface SignupDetails {
 }
 function Signup({ switchTabs, email, setEmail }: SignupDetails) {
   const [showErrEmail, setShowErrEmail] = useState(false);
-
-  function handleContinue(e: any) {
+  const [emailInUse, setEmailInUse] = useState(false);
+  async function handleContinue(e: any) {
     e.preventDefault();
     if (!validateEmail()) {
       setShowErrEmail(true);
     } else {
       setShowErrEmail(false);
-      switchTabs(2);
+      let validEmail = await checkEmailValidity(email);
+      if (!validEmail) {
+        setEmailInUse(true);
+      } else {
+        setEmailInUse(false);
+        switchTabs(2);
+      }
     }
   }
   const validateEmail = () => {
@@ -41,6 +48,7 @@ function Signup({ switchTabs, email, setEmail }: SignupDetails) {
             </h5>
             <div className="border-b my-5" />
             <span className={`${showErrEmail ? "visible" : "hidden"} text-red-500 text-sm`}> Invalid email address. </span>
+            <span className={`${emailInUse ? "visible" : "hidden"} text-red-500 text-sm`}> Email address already in use. </span>
             <input
               className="px-2.5 py-1.5 background-input border-none rounded-2xl text-[#737577] mb-1.5"
               id="EmailInputSignin"

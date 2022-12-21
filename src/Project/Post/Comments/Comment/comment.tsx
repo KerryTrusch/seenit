@@ -10,6 +10,7 @@ import {
 import moment from "moment";
 import { UserContext } from "../../../../App";
 import BodyForm from "../BodyForm";
+import LoadedImage from "../../../../Shared/components/LoadedImage";
 interface CommentDetails {
   username: string;
   timestamp: number;
@@ -18,6 +19,7 @@ interface CommentDetails {
   parentID: string;
   commentID: string;
   postID: string;
+  pfpHash: string;
 }
 function Comment({
   username,
@@ -27,6 +29,7 @@ function Comment({
   parentID,
   commentID,
   postID,
+  pfpHash
 }: CommentDetails) {
   const [childComments, setChildComments] = useState<object[]>([]);
   const [hideChildren, setHideChildren] = useState(false);
@@ -58,6 +61,9 @@ function Comment({
     <React.Fragment>
       <div className="flex flex-col w-full px-2 mb-2">
         <div className="flex">
+          <div className="flex h-[25x] w-[25px] my-auto mr-2">
+            <LoadedImage externalHash={pfpHash} className="rounded-full"/>
+          </div>
           <span className="text-sm font-semibold">{username}</span>
           <div className="px-0.5">·</div>
           <span className="text-gray-500 text-sm">{day.fromNow()}</span>
@@ -105,6 +111,7 @@ function Comment({
                       parentID={comment.parentID}
                       commentID={comment.commentID}
                       postID={postID}
+                      pfpHash={comment.pfpHash === undefined ? "defaultPFP1.png" : comment.pfpHash}
                     />
                   </div>
                 );

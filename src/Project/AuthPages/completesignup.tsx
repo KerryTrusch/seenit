@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import { checkUsernameValidity } from '../../firebase';
 interface CompleteSignupDetails {
     setUser: any;
     setUsername: any;
@@ -11,6 +12,7 @@ interface CompleteSignupDetails {
 const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAccount, password, username}: CompleteSignupDetails) => {
   const [showErrUser, setShowErrUser] = useState(false);
   const [showErrPass, setShowErrPass] = useState(false);
+  const [showInUse, setShowInUse] = useState(false);
   async function handleCreateAccount(e: any) {
     e.preventDefault();
     if (!validateUser()) {
@@ -22,6 +24,7 @@ const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAc
     } else {
       //import firebase function to create account 
       let user = await createAccount();
+      localStorage.setItem("uid", user.uid);
       console.log(user);
       setUser(user);
     }
@@ -34,6 +37,22 @@ const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAc
     if (username === null) return false;
     return username.length >= 3 && username.length <= 30;
   };
+  useEffect(() => {
+    async function checkEmail() {
+      if (username === null || username.length < 3) {
+        setShowErrUser(true);
+      } else {
+        setShowErrUser(false);
+        let validEmail = await checkUsernameValidity(username);
+        if (validEmail) {
+          setShowInUse(false);
+        } else {
+          setShowInUse(true);
+        }
+      }
+    }
+    checkEmail();
+  }, [username]);
     return (
         <form
           className="mb-10"
@@ -47,6 +66,7 @@ const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAc
             <div className="border-b my-5"/>
             <div className="flex flex-col mt-4">
               <span className={`${showErrUser ? "visible" : "hidden"} text-red-500 text-sm`}> Usernames must be between 3 and 30 characters in length. </span>
+              <span className={`${(showErrUser || username === null || username.length < 3) ? "hidden" : "visible"} ${showInUse ? "text-red-500" : "text-green-500"} text-sm mb-1`}> {showInUse ? "This username is already in use." : "Congrats! This username is available!"} </span>
               <input
               className="px-2.5 py-1.5 background-input border-none rounded-2xl text-[#737577] mb-1.5"
               id="UsernameInputSignin"

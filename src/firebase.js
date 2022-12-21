@@ -16,7 +16,6 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  browserSessionPersistence
 } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -54,12 +53,14 @@ export async function createUser(email, username, password) {
       // Signed in
       user = userCredential.user;
       uid = user.uid;
+      const randPFP = "defaultPFP" + (Math.floor(Math.random() * 3) + 1) + ".png";
+      console.log(randPFP);
       const data = {
         uid: uid,
         username: username,
         email: email,
         karma: 0,
-        profilePictureHash: null,
+        profilePictureHash: randPFP,
       };
       setDoc(doc(db, "users", username), data);
       return user;
@@ -255,8 +256,10 @@ export async function createComment(
   timestamp,
   parentID,
   postHash,
-  commentHash
+  commentHash,
+  pfpHash
 ) {
+  let imageData = (pfpHash === null || pfpHash === undefined) ? "defaultPFP" + (Math.floor(Math.random() * 3) + 1) + ".png" : pfpHash;
   const data = {
     user: user,
     body: body,
@@ -265,6 +268,7 @@ export async function createComment(
     postHash: postHash,
     commentID: commentHash,
     upvotes: 0,
+    pfpHash: imageData
   };
   await setDoc(doc(db, "comments", commentHash), data);
   await _incrementNumComments(postHash);
@@ -318,6 +322,9 @@ export async function getRepliedComments(parentID) {
 }
 
 export async function getImage(imagehash) {
+  if (imagehash === null || imagehash === undefined) {
+    return;
+  }
   const img = document.createElement("img");
   await getDownloadURL(ref(storage, imagehash)).then((url) => {
     img.setAttribute("src", url);
@@ -343,4 +350,30 @@ export async function getSensitiveUserInformation(uid) {
   //auth token (something containing a username and password) encoded with something simple in the header varifies api requests
   //without the token, the request can just return the 403 error or whatever the authentication error number is 
   //in our case, we send the uid as knowing this is as sensitive as a username:password combination
+}
+
+export async function checkUsernameValidity(username) {
+  const docQuery = query(
+    collection(db, "users"),
+    where("username", "==", username)
+  )
+  const qSnap = await getDocs(docQuery);
+  let ret = null;
+  qSnap.forEach((data) => {
+    ret = data.data();  
+  })
+  return ret === null ? true : false;
+}
+
+export async function checkEmailValidity(email) {
+  const docQuery = query(
+    collection(db, "users"),
+    where("email", "==", email)
+  )
+  const qSnap = await getDocs(docQuery);
+  let ret = null;
+  qSnap.forEach((data) => {
+    ret = data.data();  
+  })
+  return ret === null ? true : false;
 }

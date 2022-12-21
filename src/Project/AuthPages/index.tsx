@@ -27,8 +27,9 @@ const AuthModals = ({closeModal, show, modalType, setUser}: AuthModalsDetails) =
         let user = await signInUser(email, password);
         return user;
     }
-    const handleCreateUser = () => {
-        createUser(email, username, password);
+    const handleCreateUser = async () => {
+        let user = await createUser(email, username, password);
+        return user;
     }
     const validateEmail = () => {
         return String(email)
