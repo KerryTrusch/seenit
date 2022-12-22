@@ -6,6 +6,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { Routes, Route } from "react-router-dom";
 import SeenitPage from "./Project/seenit-page";
 import Submit from "./Project/CreatePost/new-post";
+import ProfilePage from "./Project/Profile";
+import ProtectedRoute from "./Auth/ProtectedRoute";
 export const UserContext = createContext(null);
 function App() {
   //App -> Navbar -> Login/Signup -> setUser on account creation or login
@@ -27,6 +29,9 @@ function App() {
             <Route path="r/:name/*" element={<SeenitPage />} />
             <Route path="r/:name/submit" element={<Submit />} />
             <Route path="submit" element={<Submit />} />
+            <ProtectedRoute user={user}>
+              <Route path="profile" element={<ProfilePage />} />
+            </ProtectedRoute>
           </Routes>
         </div>
       </div>
