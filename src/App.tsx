@@ -29,9 +29,10 @@ function App() {
             <Route path="r/:name/*" element={<SeenitPage />} />
             <Route path="r/:name/submit" element={<Submit />} />
             <Route path="submit" element={<Submit />} />
-            <ProtectedRoute user={user}>
-              <Route path="profile" element={<ProfilePage />} />
-            </ProtectedRoute>
+              <Route path="profile" element={
+              <ProtectedRoute user={user}>
+                <ProfilePage />
+              </ProtectedRoute>} />
           </Routes>
         </div>
       </div>
