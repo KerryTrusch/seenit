@@ -39,7 +39,7 @@ const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAc
   };
   useEffect(() => {
     async function checkEmail() {
-      if (username === null || username.length < 3) {
+      if (username !== null && username.length > 30) {
         setShowErrUser(true);
       } else {
         setShowErrUser(false);
@@ -62,10 +62,10 @@ const CompleteSignup = ({setUser, setUsername, setPassword, switchTabs, createAc
         >
           <div className="flex flex-col pt-16 px-10 text-center mb-4">
             <h1 className="mb-2.5 font-semibold text-2xl text-left">Complete your account</h1>
-            <span className="text-left text-xs mb-2.5 font-medium ">After filling out your username and password and hitting the button below, you will have an account!</span>
-            <div className="border-b my-5"/>
+            <span className="text-left text-sm mb-2.5 font-medium ">Fill out your username and password and hit "Create Account" below to start posting!</span>
+            <div className="border-b mt-5 mb-2"/>
             <div className="flex flex-col mt-4">
-              <span className={`${showErrUser ? "visible" : "hidden"} text-red-500 text-sm`}> Usernames must be between 3 and 30 characters in length. </span>
+              <span className={`${showErrUser ? "visible" : "hidden"} text-red-500 text-sm mb-1.5`}> Usernames must be between 3 and 30 characters in length. </span>
               <span className={`${(showErrUser || username === null || username.length < 3) ? "hidden" : "visible"} ${showInUse ? "text-red-500" : "text-green-500"} text-sm mb-1`}> {showInUse ? "This username is already in use." : "Congrats! This username is available!"} </span>
               <input
               className="px-2.5 py-1.5 background-input border-none rounded-2xl text-[#737577] mb-1.5"
